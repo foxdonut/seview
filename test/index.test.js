@@ -1,6 +1,10 @@
 import { mapKeys, sv } from "../src/index"
+import { isString } from "../src/util"
 
 const transform = node => {
+  if (isString(node)) {
+    return node
+  }
   const children = node.children || []
   const childrenObj = children.length > 0 ? { children } : {}
 
@@ -17,6 +21,20 @@ const p = sv(mapKeys({
   attrs: "attributes",
   children: "subs"
 }))
+
+const f = sv(node => {
+  if (isString(node)) {
+    return {
+      type: "#text",
+      nodeValue: node
+    }
+  }
+  return {
+    type: node.tag,
+    attributes: node.attrs || {},
+    content: node.children || []
+  }
+})
 
 export default {
   basicText: [
@@ -106,6 +124,14 @@ export default {
       {
         nodeName: "hr"
       }
+    ],
+    mapOnlyObjects: [
+      mapKeys({
+        tag: "type"
+      })(
+        "test"
+      ),
+      "test"
     ]
   },
   basicVarArgs: [
@@ -192,6 +218,27 @@ export default {
               nodeName: "label",
               attributes: { htmlFor: "sports" },
               subs: ["Sports"]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  processTextNodes: [
+    f(["div",
+      ["span", "test"]
+    ]),
+    {
+      type: "div",
+      attributes: {},
+      content: [
+        {
+          type: "span",
+          attributes: {},
+          content: [
+            {
+              type: "#text",
+              nodeValue: "test"
             }
           ]
         }

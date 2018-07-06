@@ -1,10 +1,10 @@
-import { get, isArray, isString, nodeDef, set } from "./util"
+import { get, isArray, isObject, isString, nodeDef, set } from "./util"
 
 const transformNodeDef = (transform, def) => {
   if (isArray(def.children)) {
     const result = []
     def.children.forEach(child => {
-      result.push(isString(child) ? child : transformNodeDef(transform, child))
+      result.push(isString(child) ? transform(child) : transformNodeDef(transform, child))
     })
     def.children = result
   }
@@ -17,6 +17,9 @@ export const sv = transform => node => {
 }
 
 export const mapKeys = mappings => object => {
+  if (!isObject(object)) {
+    return object
+  }
   const result = {}
 
   Object.keys(mappings).forEach(key => {

@@ -212,7 +212,7 @@
     if (isArray(def.children)) {
       var result = [];
       def.children.forEach(function (child) {
-        result.push(isString(child) ? child : transformNodeDef(transform, child));
+        result.push(isString(child) ? transform(child) : transformNodeDef(transform, child));
       });
       def.children = result;
     }
@@ -225,6 +225,9 @@
   }; };
 
   var mapKeys = function (mappings) { return function (object) {
+    if (!isObject(object)) {
+      return object
+    }
     var result = {};
 
     Object.keys(mappings).forEach(function (key) {

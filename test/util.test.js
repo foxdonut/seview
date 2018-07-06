@@ -1,4 +1,4 @@
-import { isString, isNumber, isBoolean, isArray, isObject, isFunction, get, set,
+import { isString, isNumber, isBoolean, isArray, isObject, get, set,
   getString, getTagProperties, nodeDef } from "../src/util"
 
 const string = "test"
@@ -176,40 +176,6 @@ export default {
     ],
     "false for undefined": [
       isObject(undefined),
-      false
-    ]
-  },
-  isFunction: {
-    "false for string": [
-      isFunction(string),
-      false
-    ],
-    "false for number": [
-      isFunction(number),
-      false
-    ],
-    "false for boolean": [
-      isFunction(boolean),
-      false
-    ],
-    "false for object": [
-      isFunction(object),
-      false
-    ],
-    "false for array": [
-      isFunction(array),
-      false
-    ],
-    "true for function": [
-      isFunction(func),
-      true
-    ],
-    "false for null": [
-      isFunction(null),
-      false
-    ],
-    "false for undefined": [
-      isFunction(undefined),
       false
     ]
   },

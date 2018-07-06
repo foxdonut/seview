@@ -22,7 +22,7 @@ Instead of writing this in JSX:
 Or even this in hyperscript:
 
 ```javascript
-h("div", { id: "home"}, [
+h("div", { id: "home" }, [
   h("span", { className: "instruction" }, "Enter your name:"),
   h("input", { type: "text", id: "username", name: "username", size: 10 }),
   isMessage ? h("div", { className: "message" + (isError ? " error" : "") }, message) : null
