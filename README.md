@@ -29,7 +29,7 @@ h("div", { id: "home" }, [
 ])
 ```
 
-You would write this with `seview`:
+You write this with `seview`:
 
 ```javascript
 ["div#home",

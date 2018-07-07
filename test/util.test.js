@@ -374,6 +374,26 @@ export default {
           onBlur: func
         }
       }
+    ],
+    functionTag: [
+      nodeDef([func, { name: "test" }, [func, { id: "child" }]]),
+      {
+        tag: func,
+        attrs: { name: "test" },
+        children: [
+          { tag: func, attrs: { id: "child" } }
+        ]
+      }
+    ],
+    objectTag: [
+      nodeDef([object, { name: "test" }, [object, { id: "child" }]]),
+      {
+        tag: object,
+        attrs: { name: "test" },
+        children: [
+          { tag: object, attrs: { id: "child" } }
+        ]
+      }
     ]
   }
 }

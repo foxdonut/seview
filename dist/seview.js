@@ -141,7 +141,9 @@
     var varArgsLimit = 3;
 
     // Process tag
-    var result = getTagProperties(node[0]);
+    var result = isString(node[0])
+      ? getTagProperties(node[0])
+      : { tag: node[0] };
 
     // Process attrs
     if (isObject(node[1])) {
@@ -202,7 +204,7 @@
 
       if (isArray(rest)) {
         // One child node vs Array of children
-        result.children = processChildren( isString(rest[0]) ? [ rest ] : rest );
+        result.children = processChildren( isArray(rest[0]) ? rest : [ rest ] );
       }
     }
     return result
