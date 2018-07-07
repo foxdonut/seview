@@ -1,4 +1,4 @@
-import { mapKeys, sv } from "../src/index"
+import { sv } from "../src/index"
 import { isString } from "../src/util"
 
 const transform = node => {
@@ -16,11 +16,21 @@ const transform = node => {
 
 const h = sv(transform)
 
-const p = sv(mapKeys({
-  tag: "nodeName",
-  attrs: "attributes",
-  children: "subs"
-}))
+const p = sv(node => {
+  if (isString(node)) {
+    return node
+  }
+  const result = {
+    nodeName: node.tag
+  }
+  if (node.attrs) {
+    result.attributes = node.attrs
+  }
+  if (node.children) {
+    result.subs = node.children
+  }
+  return result
+})
 
 const f = sv(node => {
   if (isString(node)) {
@@ -81,59 +91,6 @@ export default {
       ] }
     }
   ],
-  mapKeys: {
-    basic: [
-      mapKeys({
-        tag: "type",
-        attrs: "props",
-        children: "props.children"
-      })({
-        tag: "div",
-        attrs: { className: "duck yellow" },
-        children: ["text"]
-      }),
-      {
-        type: "div",
-        props: {
-          className: "duck yellow",
-          children: ["text"]
-        }
-      }
-    ],
-    mappedOnly: [
-      mapKeys({
-        tag: "nodeName",
-        attrs: "attributes"
-      })({
-        tag: "div",
-        attrs: { id: "test" },
-        children: ["test"]
-      }),
-      {
-        nodeName: "div",
-        attributes: { id: "test" }
-      }
-    ],
-    mapOnlyPresent: [
-      mapKeys({
-        tag: "nodeName",
-        attrs: "attributes"
-      })({
-        tag: "hr"
-      }),
-      {
-        nodeName: "hr"
-      }
-    ],
-    mapOnlyObjects: [
-      mapKeys({
-        tag: "type"
-      })(
-        "test"
-      ),
-      "test"
-    ]
-  },
   basicVarArgs: [
     p(["div", {},
       ["div", "test1"],

@@ -226,26 +226,7 @@
     return transformNodeDef(transform, def)
   }; };
 
-  var mapKeys = function (mappings) { return function (object) {
-    if (!isObject(object)) {
-      return object
-    }
-    var result = {};
-
-    Object.keys(mappings).forEach(function (key) {
-      var from = key.split(".");
-      var to = mappings[key].split(".");
-      var value = get(object, from);
-      if (value != null) {
-        set(result, to, value);
-      }
-    });
-
-    return result
-  }; };
-
   exports.sv = sv;
-  exports.mapKeys = mapKeys;
 
   Object.defineProperty(exports, '__esModule', { value: true });
 
