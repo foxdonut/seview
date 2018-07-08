@@ -121,18 +121,26 @@
     children: [ { tag: ... }, "text", ... ]
   }
   */
-  var processChildren = function (rest) {
-    var ch = [];
+  var processChildren = function (rest, result) {
+    if ( result === void 0 ) result = [];
+
     rest.forEach(function (child) {
       // Text node
       if (getString(child)) {
-        ch.push(getString(child));
+        result.push(getString(child));
       }
       else if (isArray(child)) {
-        ch.push(nodeDef(child));
+        // Nested array
+        if (isArray(child[0])) {
+          processChildren(child, result);
+        }
+        // Regular node
+        else if (child.length > 0) {
+          result.push(nodeDef(child));
+        }
       }
     });
-    return ch
+    return result
   };
 
   var nodeDef = function (node) {
@@ -203,7 +211,7 @@
       }
 
       if (isArray(rest)) {
-        // One child node vs Array of children
+        // Array of children vs One child node
         result.children = processChildren( isArray(rest[0]) ? rest : [ rest ] );
       }
     }

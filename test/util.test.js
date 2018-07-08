@@ -295,10 +295,12 @@ export default {
         ],
         [],
         [ [] ],
-        ["div", "test4"],
         [
-          ["div", "test5"]
-        ],
+          ["div", "test4"],
+          [
+            ["div", "test5"]
+          ]
+        ]
       ]]),
       {
         tag: "div",
@@ -320,10 +322,12 @@ export default {
         ],
         [],
         [ [] ],
-        ["div", "test4"],
         [
-          ["div", "test5"]
-        ],
+          ["div", "test4"],
+          [
+            ["div", "test5"]
+          ]
+        ]
       ]),
       {
         tag: "div",
