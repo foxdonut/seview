@@ -1,11 +1,23 @@
 # seview: S-Expression View
 
-A simple way of expressing views, meant to be used with a virtual DOM library.
+A simple way of writing views with [s-expressions](https://en.wikipedia.org/wiki/S-expression),
+and meant to be used with a virtual DOM library.
 
 ## Why?
 
 Because plain JavaScript is simpler to write and build than JSX, and it's great to
 write views in a way that is independent of the virtual DOM library being used.
+It's also nice to use convenient features even if the underlying virtual DOM library
+does not support them.
+
+## Convenient Features
+
+- CSS-style selectors such as `"input:text.form-control[name=username]"`
+- Removal of `null`, `undefined`, and `false`, so that you can write
+  `isMessage && ["div", "message"]`
+- CSS classes included or excluded using flags, so that you can write
+  `["div", { className: { "error": isError } }, "message"]`
+- Express children as an array or as varargs
 
 ## Example
 
@@ -39,9 +51,24 @@ You write this with `seview`:
 ])
 ```
 
-Besides the conveniences of the syntax, you also have no `h` anywhere. To switching from one virtual
-DOM library to another, you only need to make changes in **one** place. All your views can remain
-the same.
+Besides the conveniences of the syntax, you also don't have to write `h` at every element. To
+switch from one virtual DOM library to another, you only need to make changes in **one** place.
+All your view code can remain the same.
+
+## Installation
+
+Using Node.js:
+
+```
+npm i -S seview
+```
+
+With a script tag:
+
+```html
+<script src="http://unpkg.com/seview"></script>
+```
+
 
 ## More Content to come
 
