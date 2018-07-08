@@ -286,6 +286,56 @@ export default {
         ]
       }
     ],
+    nestedArrays: [
+      nodeDef(["div", [
+        ["div", "test1"],
+        [
+          ["div", "test2"],
+          ["div", "test3"]
+        ],
+        [],
+        [ [] ],
+        ["div", "test4"],
+        [
+          ["div", "test5"]
+        ],
+      ]]),
+      {
+        tag: "div",
+        children: [
+          { tag: "div", children: ["test1"] },
+          { tag: "div", children: ["test2"] },
+          { tag: "div", children: ["test3"] },
+          { tag: "div", children: ["test4"] },
+          { tag: "div", children: ["test5"] }
+        ]
+      }
+    ],
+    nestedArraysVarargs: [
+      nodeDef(["div",
+        ["div", "test1"],
+        [
+          ["div", "test2"],
+          ["div", "test3"]
+        ],
+        [],
+        [ [] ],
+        ["div", "test4"],
+        [
+          ["div", "test5"]
+        ],
+      ]),
+      {
+        tag: "div",
+        children: [
+          { tag: "div", children: ["test1"] },
+          { tag: "div", children: ["test2"] },
+          { tag: "div", children: ["test3"] },
+          { tag: "div", children: ["test4"] },
+          { tag: "div", children: ["test5"] }
+        ]
+      }
+    ],
     justATag: [
       nodeDef(["hr"]),
       { tag: "hr" }
@@ -312,6 +362,8 @@ export default {
         undefined,
         null,
         false,
+        [],
+        [[]],
         "",
         true,
         NaN,
