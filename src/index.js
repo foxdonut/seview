@@ -11,7 +11,7 @@ const transformNodeDef = (transform, def) => {
   return transform(def)
 }
 
-export const sv = transform => node => {
-  const def = nodeDef(node)
+export const sv = (transform, options) => node => {
+  const def = nodeDef(node, options)
   return transformNodeDef(transform, def)
 }

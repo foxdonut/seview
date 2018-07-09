@@ -63,7 +63,7 @@ returns tag properties: for example, "input:password#duck.quack.yellow[name=pwd]
   attrs: { type: "password", id: "duck", name: "pwd", required: true }
 }
 */
-export const getTagProperties = selector => {
+export const getTagProperties = (selector, className = "className") => {
   const result = {}
 
   let tagType = selector.match(tagTypeRegex)
@@ -100,7 +100,7 @@ export const getTagProperties = selector => {
     })
 
     if (classes.length > 0) {
-      set(result, ["attrs", "className"], classes.join(" "))
+      set(result, ["attrs", className], classes.join(" "))
     }
   }
 
@@ -136,14 +136,14 @@ const processChildren = (rest, result = []) => {
   return result
 }
 
-export const nodeDef = node => {
+export const nodeDef = (node, options = { className: "className" }) => {
   // Tag
   let rest = node[2]
   let varArgsLimit = 3
 
   // Process tag
   const result = isString(node[0])
-    ? getTagProperties(node[0])
+    ? getTagProperties(node[0], options.className)
     : { tag: node[0] }
 
   // Process attrs
@@ -151,9 +151,9 @@ export const nodeDef = node => {
     const attrs = node[1]
 
     // Process className
-    if (attrs["className"] !== undefined) {
-      const classAttr = attrs["className"]
-      delete attrs["className"]
+    if (attrs[options.className] !== undefined) {
+      const classAttr = attrs[options.className]
+      delete attrs[options.className]
 
       let addClasses = []
       if (isString(classAttr)) {
@@ -167,9 +167,9 @@ export const nodeDef = node => {
         })
       }
       if (addClasses.length > 0) {
-        const existingClassName = get(result, ["attrs", "className"])
+        const existingClassName = get(result, ["attrs", options.className])
         const addClassName = addClasses.join(" ")
-        set(result, ["attrs", "className"],
+        set(result, ["attrs", options.className],
           (existingClassName ? existingClassName + " " : "")
           + addClassName
         )

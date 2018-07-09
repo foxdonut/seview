@@ -15,6 +15,7 @@ const transform = node => {
 }
 
 const h = sv(transform)
+const k = sv(transform, { className: "class" })
 
 const p = sv(node => {
   if (isString(node)) {
@@ -89,6 +90,34 @@ export default {
         { type: "div", props: { children: ["test1"] } },
         { type: "div", props: { children: ["test2"] } }
       ] }
+    }
+  ],
+  combineClassName: [
+    h(["button.btn", { className: "btn-default other" }]),
+    {
+      type: "button",
+      props: { className: "btn btn-default other" }
+    }
+  ],
+  combineClassNameWithDifferentProp: [
+    k(["button.btn", { class: "btn-default other" }], { className: "class" }),
+    {
+      type: "button",
+      props: { class: "btn btn-default other" }
+    }
+  ],
+  classNameToggles: [
+    h(["button.btn", { className: { "btn-primary": true, "btn-default": false }}]),
+    {
+      type: "button",
+      props: { className: "btn btn-primary" }
+    }
+  ],
+  classNameTogglesFalsy: [
+    h(["button.btn", { className: { "btn-primary": true, "one": null, "two": undefined, "three": 0 }}]),
+    {
+      type: "button",
+      props: { className: "btn btn-primary" }
     }
   ],
   basicVarArgs: [

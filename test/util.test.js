@@ -234,6 +234,12 @@ export default {
     ]
   },
   getTagProperties: {
+    divByDefault: [
+      getTagProperties(""),
+      {
+        tag: "div"
+      }
+    ],
     divByDefaultWithClass: [
       getTagProperties(".btn"),
       {
@@ -255,11 +261,25 @@ export default {
         attrs: { type: "password", id: "duck", className: "quack yellow", name: "pwd", required: true }
       }
     ],
+    valueWithSpaces: [
+      getTagProperties("input[placeholder=Enter your name here]"),
+      {
+        tag: "input",
+        attrs: { placeholder: "Enter your name here" }
+      }
+    ],
     extraTypesIgnored: [
       getTagProperties("input:text:password.form-input"),
       {
         tag: "input",
         attrs: { type: "text", className: "form-input" }
+      }
+    ],
+    optionForClassName: [
+      getTagProperties("input.form-input", "class"),
+      {
+        tag: "input",
+        attrs: { class: "form-input" }
       }
     ]
   },
@@ -405,6 +425,13 @@ export default {
       {
         tag: "button",
         attrs: { className: "btn btn-default other" }
+      }
+    ],
+    combineClassNameWithDifferentProp: [
+      nodeDef(["button.btn", { class: "btn-default other" }], { className: "class" }),
+      {
+        tag: "button",
+        attrs: { class: "btn btn-default other" }
       }
     ],
     classNameToggles: [

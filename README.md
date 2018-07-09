@@ -10,15 +10,6 @@ write views in a way that is independent of the virtual DOM library being used.
 It's also nice to use convenient features even if the underlying virtual DOM library
 does not support them.
 
-## Convenient Features
-
-- CSS-style selectors such as `"input:text.form-control[name=username]"`
-- Removal of `null`, `undefined`, and `false`, so that you can write
-  `isMessage && ["div", "message"]`
-- CSS classes included or excluded using flags, so that you can write
-  `["div", { className: { "error": isError } }, "message"]`
-- Express children as an array or as varargs
-
 ## Example
 
 Instead of writing this in JSX:
@@ -41,7 +32,7 @@ h("div", { id: "home" }, [
 ])
 ```
 
-You write this with `seview`:
+You can write this with `seview`:
 
 ```javascript
 ["div#home",
@@ -55,26 +46,142 @@ Besides the conveniences of the syntax, you also don't have to write `h` at ever
 switch from one virtual DOM library to another, you only need to make changes in **one** place.
 All your view code can remain the same.
 
-## Installation
+## Features
 
-Using Node.js:
+`seview` supports CSS-style selectors in tag names, `{ className: boolean }` for toggling classes,
+using an array or varags for children, flattening of nested arrays, and removal of null/empty elements.
+
+### Element
+
+An element is an array:
 
 ```
-npm i -S seview
+[tag, attrs, children]
 ```
 
-With a script tag:
+or a string (text node):
 
+```
+"this is a text node"
+```
+
+The `tag` can be a string, or something that your virtual DOM library understands; for example,
+a `Component` in React. For the latter, `seview` just returns the selector as-is.
+
+### Tag
+
+When the tag is a string, it is assumed to be a tag name, possibly with CSS-style selectors:
+
+- `"div"`, `"span"`, `"h1"`, `"input"`, etc.
+- `"div.highlighted"`, `"button.btn.btn-default"` for classes
+- `"div#home"` for `id`
+- `"input:text"` for `<input type="text">`. There can only be one type, so additional types are
+ignored. `"input:password:text"` would result in `<input type="password">`.
+- `"input[name=username][required]"` results in `<input name="username" required="true">`
+- if you need spaces, just use them: `"input[placeholder=Enter your name here]"`
+- default tag is `"div"`, so you can write `""`, `".highlighted"`, `"#home"`, etc.
+- these features can all be used together, for example
+  `"input:password#duck.quack.yellow[name=pwd][required]"` results in
+  `<input type="password" id="duck" class="quack yellow" name="pwd" required="true">`
+
+### Attributes
+
+If the second item is an object, it is considered to be the attributes for the element.
+
+Of course, for everything that you can do with a CSS-style selector in a tag as shown in the
+previous section, you can also use attributes:
+
+```javascript
+["input", { type: "password", name: "password", placeholder: "Enter your password here" }]
+```
+
+You can also mix selectors and attributes. If you specify something in both places, the attribute
+overwrites the selector.
+
+```javascript
+["input:password[name=password]", { placeholder: "Enter your password here" }]
+```
 ```html
-<script src="http://unpkg.com/seview"></script>
+<input type="password" name="password" placeholder="Enter password name here">
 ```
 
+```javascript
+["input:password[name=username]", { type: "text", placeholder: "Enter your username here" }]
+```
+```html
+<input type="text" name="username" placeholder="Enter your username here">
+```
 
-## More Content to come
+### Classes
 
-_This README is a work-in-progress, more content is forthcoming._
+Classes can be specified in the tag as a selector (as shown above), and/or in attributes using
+`className`:
 
-## Varargs and text nodes
+```javascript
+["button.btn.info", { className: "btn-default special" }]
+```
+```html
+<button class="btn info btn-default special">
+```
+
+If you specify an object instead of a string for `className`, the keys are classes and the values
+indicate whether or not to include the class. The class is only included if the value is truthy.
+
+```javascript
+// isDefault is true
+// isError is false
+["button.btn", { className: { "btn-default": isDefault, "error": isError } }]
+```
+```html
+<button class="btn btn-default">
+```
+
+Note that `className` is the default key, but this can be configured to be something else, such
+as `class`.
+
+### Children (array or varags)
+
+The last item(s), (starting with the second if there are no attributes, and starting with the
+third if attributes are present), are the children. The children can be:
+
+- an array, or
+- varargs.
+
+#### Using an array
+
+You can specify children as an array:
+
+```javascript
+["div", [
+  ["span", ["Hello"]],
+  ["b", ["World"]]
+]
+```
+```html
+<div>
+  <span>Hello</span>
+  <b>World</b>
+</div>
+```
+
+#### Using varargs
+
+You can specify children as varargs:
+
+```javascript
+["div",
+  ["span", "Hello"],
+  ["b", "World"]
+]
+```
+```html
+<div>
+  <span>Hello</span>
+  <b>World</b>
+</div>
+```
+
+### Varargs and text nodes
 
 The problem with supporting varargs is, how do you differentiate a single element from two text nodes?
 
@@ -90,15 +197,341 @@ vs
 ["div", ["hello", "there"]]
 ```
 
-For the second case, varargs MUST be used:
+For the second case, varargs **must** be used:
 
 ```js
 ["div", "hello", "there"]
 ```
 
+### Flattened arrays
+
+Whether using an array of children or varargs, nested arrays are automatically flattened:
+
+```javascript
+["div", [
+  ["div", "one"],
+  [
+    ["div", "two"],
+    [
+      ["div", "three"]
+    ]
+  ]
+]]
+```
+
+or
+
+```javascript
+["div",
+  ["div", "one"],
+  [
+    ["div", "two"],
+    [
+      ["div", "three"]
+    ]
+  ]
+]
+```
+
+Both result in
+
+```html
+<div>
+  <div>one</div>
+  <div>two</div>
+  <div>three</div>
+</div>
+```
+
+### Ignored elements
+
+The following elements are ignored and not included in the output:
+
+- `undefined`
+- `null`
+- `false`
+- `""`
+- `[]`
+
+This makes it simple to conditionally include an element by writing:
+
+```javascript
+condition && ["div", "message"]
+```
+
+If `condition` is falsy, the `div` will not be included in the output. Because it is completely
+excluded, this will work even if the virtual DOM library that you are using does not handle
+`false`, `null`, or `undefined`.
+
+### Elements converted to a string
+
+The following elements will be converted to a string:
+
+- `true`
+- numbers
+- `NaN`
+- `Infinity`
+
+## Installation
+
+Using Node.js:
+
+```
+npm i -S seview
+```
+
+With a script tag:
+
+```html
+<script src="http://unpkg.com/seview"></script>
+```
+
+## Usage
+
+`seview` exports a single function, `sv`, that you use to obtain a function which you can name
+as you wish; in the examples, I name this function `h`. Calling `h(view)`, where `view` is the view
+expressed as arrays as we have seen above, produces the final result suitable for your virtual DOM
+library.
+
+When you call `sv`, you pass it a function that gets called for every node in the view. Each
+node has the following structure:
+
+```javascript
+{
+  tag: "button",
+  attrs: { id: "save", className: "btn btn-default", ... }
+  children: [ ... ]
+}
+```
+
+The function that you write needs to convert the structure above to what is expected by the
+virtual DOM library that you are using. Note that your function will also be called for each
+element in `children`.
+
+You can optionally pass a second parameter to `sv` to indicate something other than `className`
+as the property to use for CSS classes. For example:
+
+```javascript
+const h = sv(func, { className: "class" })
+```
+
+This would use the `class` property in the `attrs` to indicate the CSS classes.
+
+So you need to write a snippet of code that you pass to `sv` to wire up `seview` with the virtual
+DOM library that you are using. Below, you will find examples for 8 libraries. Using a different
+library is not difficult; you should get a pretty good idea of what to do from the examples below.
+
+Also, please note that the snippets below are just examples; feel free to change and adapt
+according to your specific needs. In fact, this is why these snippets are not included in
+`seview` or even as separate libraries. They are just a handful of code, and you might like
+to tweak the code to your preference.
+
+## [React](https://reactjs.org/)
+
+```javascript
+import React from "react";
+import { sv } from "seview";
+
+const h = sv(node => {
+  if (typeof node === "string") {
+    return node;
+  }
+  const attrs = node.attrs || {};
+  if (attrs.innerHTML) {
+    attrs.dangerouslySetInnerHTML = { __html: attrs.innerHTML };
+    delete attrs.innerHTML;
+  }
+  const args = [node.tag, node.attrs || {}];
+  if (node.children) {
+    node.children.forEach(child => args.push(child))
+  }
+  return React.createElement.apply(null, args);
+});
+```
+
+## [Preact](https://preactjs.com/)
+
+```javascript
+import preact from "preact";
+import { sv } from "seview";
+
+const h = sv(node => {
+  if (typeof node === "string") {
+    return node;
+  }
+  const attrs = node.attrs || {};
+  if (attrs.innerHTML) {
+    attrs.dangerouslySetInnerHTML = { __html: attrs.innerHTML };
+    delete attrs.innerHTML;
+  }
+  return preact.h(node.tag, node.attrs || {}, node.children || []);
+});
+```
+
+## [Inferno](https://infernojs.org/)
+
+```javascript
+import { h as hyper } from "inferno-hyperscript";
+import { sv } from "seview";
+
+const processAttrs = (attrs = {}) => {
+  Object.keys(attrs).forEach(key => {
+    if (key === "htmlFor") {
+      const value = attrs[key];
+      delete attrs[key];
+      attrs["for"] = value;
+    }
+  })
+  return attrs;
+};
+
+const h = sv(node =>
+  (typeof node === "string")
+  ? node
+  : hyper(node.tag, processAttrs(node.attrs), node.children || [])
+);
+```
+
+## [Mithril](http://mithril.js.org/)
+
+```javascript
+import m from "mithril";
+import { sv } from "seview";
+
+const processAttrs = (attrs = {}) => {
+  Object.keys(attrs).forEach(key => {
+    if (key.startsWith("on")) {
+      const value = attrs[key];
+      delete attrs[key];
+      attrs[key.toLowerCase()] = value;
+    }
+  })
+  return attrs;
+};
+
+const h = sv(node =>
+  (typeof node === "string")
+  ? { tag: "#", children: node }
+  : node.attrs && node.attrs.innerHTML
+    ? m(node.tag, m.trust(node.attrs.innerHTML))
+    : m(node.tag, processAttrs(node.attrs), node.children || [])
+);
+```
+
+## [Snabbdom](https://github.com/snabbdom/snabbdom/)
+
+```javascript
+import { html } from "snabbdom-jsx";
+import { sv } from "seview";
+
+const processAttrs = (attrs = {}) => {
+  Object.keys(attrs).forEach(key => {
+    if (key.startsWith("on")) {
+      const value = attrs[key];
+      delete attrs[key];
+      attrs["on-" + key.toLowerCase().substring(2)] = value;
+    }
+  })
+  return attrs;
+};
+
+const h = sv(node =>
+  (typeof node === "string")
+  ? node
+  : html(node.tag, processAttrs(node.attrs), node.children || [])
+);
+```
+
+## [domvm](https://github.com/leeoniya/domvm)
+
+```javascript
+import { defineElement } from "domvm";
+import { sv } from "seview";
+
+const attrMappings = {
+  "className": "class"
+};
+
+const processAttrs = (attrs = {}) => {
+  Object.keys(attrs).forEach(key => {
+    if (key.startsWith("on")) {
+      const value = attrs[key];
+      delete attrs[key];
+      attrs[key.toLowerCase()] = value;
+    }
+    else {
+      const to = attrMappings[key];
+      if (to) {
+        const value = attrs[key];
+        delete attrs[key];
+        attrs[to] = value;
+      }
+    }
+  });
+  return attrs;
+};
+
+const h = sv(node =>
+  (typeof node === "string")
+  ? node
+  : defineElement(node.tag, processAttrs(node.attrs), node.children || [])
+);
+```
+
+## [petit-dom](https://github.com/yelouafi/petit-dom)
+
+```javascript
+import { h as hyper } from "petit-dom";
+import { sv } from "seview";
+
+const attrMappings = {
+  "htmlFor": "for",
+  "className": "class"
+};
+
+const processAttrs = (attrs = {}) => {
+  Object.keys(attrs).forEach(key => {
+    if (key.startsWith("on")) {
+      const value = attrs[key];
+      delete attrs[key];
+      attrs[key.toLowerCase()] = value;
+    }
+    else {
+      const to = attrMappings[key];
+      if (to) {
+        const value = attrs[key];
+        delete attrs[key];
+        attrs[to] = value;
+      }
+    }
+  });
+  return attrs;
+};
+
+const h = sv(node =>
+  (typeof node === "string")
+  ? node
+  : hyper(node.tag, processAttrs(node.attrs), node.children || [])
+);
+```
+
+## [DIO](https://dio.js.org/)
+
+```javascript
+import { h as hyper } from "dio.js";
+import { sv } from "seview";
+
+const h = sv(node =>
+  (typeof node === "string")
+  ? node
+  : hyper(node.tag, node.attrs || {}, node.children || [])
+);
+```
+
 ## Credits
 
-`seview` is inspired by the following. Credit goes to the authors and their communities.
+`seview` is inspired by the following. Credit goes to the authors and their communities - thank you
+for your excellent work!
 
 - [How to UI in 2018](https://medium.com/@thi.ng/how-to-ui-in-2018-ac2ae02acdf3)
 - [ijk](https://github.com/lukejacksonn/ijk)
