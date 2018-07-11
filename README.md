@@ -341,13 +341,12 @@ const h = sv(node => {
     attrs.dangerouslySetInnerHTML = { __html: attrs.innerHTML };
     delete attrs.innerHTML;
   }
-  const args = [node.tag, node.attrs || {}];
-  if (node.children) {
-    node.children.forEach(child => args.push(child))
-  }
+  const args = [node.tag, node.attrs || {}].concat(node.children || []);
   return React.createElement.apply(null, args);
 });
 ```
+
+[seview + React - live example](https://flems.io/#0=N4IgzgpgNhDGAuEAmIBcICGAHLA6AVmCADQgBmAljEagNqgB2GAthGpjrgBbzNQkhYAewaJR7ADxIKANwAEFJAF4AOhyxqAfBID00mZpABfYoxZt0keAFc8hAcNERx6R2HhyucpXMgyKEADuuGAyABQMQkgQ3ppywCoMcgpkcmHwAJ5YEEKpkdHeSj5q7gBOFAwA5moAlPGJycmlEDalSfkQANwNckY9bh4Y8PClYN5yHbhDI2MAPrPxRt1JKWnTo7gVDBClABIAKgCyADJ1CSvJ62C4SBhVO0LWYFAZAMotAJIM23tHx+PAOQAfSBPD4qDkV023x2BxOvWWjTk0RgiEhww2W1hf0RvX6InckNKlTGPlok3gGEqxAmUQgUwxcwWwCMAF1cI5YEMInSOVwqEhmkl5nJaKyarjmq0kgAlCAYBAc5pDCAAURgrFEUxwLwi1igUBpGGJYAliSMZoYAkgMAQFAJ7AAjAAmVAABmMphATFY7GwdiIpEcYng7FgUAwYDGAGFHk5SnIIAAPMRIMZyhXwXCx5hYETODznZLCXP50QAdSoUEOcfgYTOPWS8H51ysr0piDCgOE1lEELdvUtyT6KwqsFK9fqFzkzYorZa7ZVXbkPb7M5bIQ79NXHgA1HJHYPcSOms5ohOG9OpdY2p4wrQ1Po1MRG40H+AsHdn3I1LHe4hSghNQ5H3WdWy3Dla1ZF9p2Sd8nxIV8kXfAAjaxhhEXAUPgBgsJwgBaLBymYY0Mm-QERGjKAKFgABrCEwOhccsIqJB0hbOoTB-EAvnHCBNXgNRWSQuRhOncVj3NRJEnDSMxgAQRwRMUzPdN5UVHM822UQp1PBhz0nItGmvW8uHvR9ZEg0QMAqHZnxE98uEdb8SggfwghAuQMwQZSWCwGAhJgpE4L-eMxKRCSehHEdvPgAARAB5Q5cCFAyzNoRSsHFI0cEtBwhFzKgdnYFCMBQ6BrWgOB4HtBgaBAR0ADZ3WMaCQGohhaJoehvXMdhlUVaIZGgIQsAEghAxAG9+HQHh4CwMBUB0HReywWjKkg5gdAG+AVuYJBtvUrMhpGsaCwmgRMmydgwHHCgsFDEwzF9dAdvwpACpuNzTvG+xSGm9g5oWpaVoYNaNpLQ7M3egq9oOt6PuYL7hqgUbfsmq6LHAO6Hs9Z6sZQoQhHgMpsFwZgKg5KMBAB2bhmB5aSKTWAkFwwnidJrAWdwyH2ZJkZsB0AAWXA3VFnRYCjHQ+c58nKcljGsix9wMhgPHepe8A3ICQIadKGaQCBxbltW9bNp0PwdYAATFgBWcXpHcC3taCC7SExm6ccetqfWVl3Ai8o7jCAA)
 
 ## [Preact](https://preactjs.com/)
 
@@ -380,6 +379,10 @@ const processAttrs = (attrs = {}) => {
       const value = attrs[key];
       delete attrs[key];
       attrs["for"] = value;
+    }
+    else if (attrs.innerHTML) {
+      attrs.dangerouslySetInnerHTML = { __html: attrs.innerHTML };
+      delete attrs.innerHTML;
     }
   })
   return attrs;
@@ -418,6 +421,8 @@ const h = sv(node =>
 );
 ```
 
+[seview + Mithril - live example](https://flems.io/#0=N4IgzgpgNhDGAuEAmIBcICGAHLA6AVmCADQgBmAljEagNqgB2GAthGpjrgBbzNQkhYAewaJR7ADxIKANwAEFJAF4AOhyxqAfBID00mZpABfYoxZt0keAFc8hAcNERx6R2HhysAJyGwIYMABBeHgvMDklOQAKDBCwiLlgIwBKCM1ElQY5OQB5ACN8OHhcAGsIAE8wGLiwZNwyIS8AUQxYLiiy8rSMrOyFMmjO3HcML3gwAHUKeHa1ETVk1OBMvr63DxkMKGsIBNjQsFpOgF0AbhXVuSRoCEQ5fbCjirOL1YfDofghABkhAHcIF4AMIYSBRZLHBKbbYQc69bJGC4pC5eW7WLxZd5woxwzLrORcBKQGQUCB-YYyKIMITXNIXKLwcpYCBCAbU2lKTlyNTuLwUBgAcwWFwA-Ik5PAMALUNyQABiNTEORtKhIVEMGXs3aI3qamkQXDvOQAMmNci1hpquH5DEBAAkACoAWW+rzkYuYVP1uElAqVzB9Xms7i910tB2tDFtXkdLsWbplnotvqV3l8-iCNVDBveySVFpVUDVzjkAB9S3JaMdkplknCBJAYAgKCIaCAAIwADlQAAZjKYQExWOxsHYiKRHGJ4Ox8UChNYnF4EmQF82ROCetkYB5hAuPJEe7jeiuGGusvzYF4N8t4cr56IANQPuEIzIotEYzd9ElkmUyLXdO0tBqPoiputkwHgFgGAMIqspznugIymocgPnee7HMQ4GViBshgbeqyQXk1ghCIuB5PADDkZRAC03gUMwozlHBwByCIQJQBQsAlDKF5LiYsoAJKnqirCiGoxzYZJt7Vki2JHvigQ4AkN7ZD+fx-gBSjpEBuEyLgk4YPygL4YRahcO2cE8hA6moXITrTFwfJQHIEAAB4sFgMASVht60Ahi7SdkskMDib4MAGzD3vAMQ4EqSlYHWmQOEIzBYFQgLsHkGB5NADY3GebbtgAbL2xiYSAnEMCUND0IO5jsMwjnOQI6L8OgPDwFgYCoDoOgLlgJQCgZqU6E1MzOQAAu2uAzcVY3NVQBDjiAjLMuwYCXhQWDTiYZjDugeRCEI4yhNguBNVRsABK1XjtSAnXdb1Y0YG5sBIFRR0nby2DvVdo1fadXjYDoAAsuA9hDOjXWAOiAz9eCXQZN2kGtFjgIyMD9vt6PEqSfy3fdj09X1A1DSNzA6HjZKTZDACsUPSO4VM2fjy0CGjG1bTt5WkEOuOs2S9mLfwRhAA)
+
 ## [Snabbdom](https://github.com/snabbdom/snabbdom/)
 
 ```javascript
@@ -445,11 +450,12 @@ const h = sv(node =>
 ## [domvm](https://github.com/leeoniya/domvm)
 
 ```javascript
-import { defineElement } from "domvm";
 import { sv } from "seview";
 
 const attrMappings = {
-  "className": "class"
+  "className": "class",
+  "htmlFor": "for",
+  "innerHTML": ".innerHTML"
 };
 
 const processAttrs = (attrs = {}) => {
@@ -474,7 +480,7 @@ const processAttrs = (attrs = {}) => {
 const h = sv(node =>
   (typeof node === "string")
   ? node
-  : defineElement(node.tag, processAttrs(node.attrs), node.children || [])
+  : defineElement(node.tag, processAttrs(node.attrs), node.children || null)
 );
 ```
 
@@ -485,8 +491,8 @@ import { h as hyper } from "petit-dom";
 import { sv } from "seview";
 
 const attrMappings = {
-  "htmlFor": "for",
-  "className": "class"
+  "className": "class",
+  "htmlFor": "for"
 };
 
 const processAttrs = (attrs = {}) => {
