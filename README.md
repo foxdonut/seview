@@ -46,6 +46,10 @@ Besides the conveniences of the syntax, you also don't have to write `h` at ever
 switch from one virtual DOM library to another, you only need to make changes in **one** place.
 All your view code can remain the same.
 
+If you are using the [Meiosis pattern](http://meiosis.js.org), `seview` is a great way to further
+decouple your code from specific libraries. Your views become independent of the underlying
+virtual DOM library API.
+
 ## Features
 
 `seview` supports CSS-style selectors in tag names, `{ className: boolean }` for toggling classes,
