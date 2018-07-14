@@ -68,7 +68,9 @@
     attrs: { type: "password", id: "duck", name: "pwd", required: true }
   }
   */
-  var getTagProperties = function (selector) {
+  var getTagProperties = function (selector, className) {
+    if ( className === void 0 ) className = "className";
+
     var result = {};
 
     var tagType = selector.match(tagTypeRegex);
@@ -105,7 +107,7 @@
       });
 
       if (classes.length > 0) {
-        set(result, ["attrs", "className"], classes.join(" "));
+        set(result, ["attrs", className], classes.join(" "));
       }
     }
 
@@ -143,14 +145,16 @@
     return result
   };
 
-  var nodeDef = function (node) {
+  var nodeDef = function (node, options) {
+    if ( options === void 0 ) options = { className: "className" };
+
     // Tag
     var rest = node[2];
     var varArgsLimit = 3;
 
     // Process tag
     var result = isString(node[0])
-      ? getTagProperties(node[0])
+      ? getTagProperties(node[0], options.className)
       : { tag: node[0] };
 
     // Process attrs
@@ -158,9 +162,9 @@
       var attrs = node[1];
 
       // Process className
-      if (attrs["className"] !== undefined) {
-        var classAttr = attrs["className"];
-        delete attrs["className"];
+      if (attrs[options.className] !== undefined) {
+        var classAttr = attrs[options.className];
+        delete attrs[options.className];
 
         var addClasses = [];
         if (isString(classAttr)) {
@@ -174,9 +178,9 @@
           });
         }
         if (addClasses.length > 0) {
-          var existingClassName = get(result, ["attrs", "className"]);
+          var existingClassName = get(result, ["attrs", options.className]);
           var addClassName = addClasses.join(" ");
-          set(result, ["attrs", "className"],
+          set(result, ["attrs", options.className],
             (existingClassName ? existingClassName + " " : "")
             + addClassName
           );
@@ -229,8 +233,8 @@
     return transform(def)
   };
 
-  var sv = function (transform) { return function (node) {
-    var def = nodeDef(node);
+  var sv = function (transform, options) { return function (node) {
+    var def = nodeDef(node, options);
     return transformNodeDef(transform, def)
   }; };
 
