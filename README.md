@@ -18,7 +18,7 @@ Instead of writing this in JSX:
 <div id="home">
   <span className="instruction">Enter your name:</span>
   <input type="text" id="username" name="username" size="10"/>
-  {isMessage ? <div className={"message" + (isError ? " error" : "")}>{message}</div> : null}
+  {isMessage && <div className={"message" + (isError ? " error" : "")}>{message}</div>}
 </div>
 ```
 
@@ -28,7 +28,7 @@ Or even this in hyperscript:
 h("div", { id: "home" }, [
   h("span", { className: "instruction" }, "Enter your name:"),
   h("input", { type: "text", id: "username", name: "username", size: 10 }),
-  isMessage ? h("div", { className: "message" + (isError ? " error" : "") }, message) : null
+  isMessage && h("div", { className: "message" + (isError ? " error" : "") }, message)
 ])
 ```
 
@@ -39,7 +39,7 @@ You can write this with `seview`:
   ["span.instruction", "Enter your name:"],
   ["input:text#username[name=username][size=10]"],
   isMessage && ["div.message", { className: { "error": isError } }, message]
-])
+]
 ```
 
 Besides the conveniences of the syntax, you also don't have to write `h` at every element. To
