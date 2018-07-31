@@ -8,7 +8,8 @@
   var isNumber = function (x) { return typeof x === "number"; };
   var isBoolean = function (x) { return typeof x === "boolean"; };
   var isArray = function (x) { return Array.isArray(x); };
-  var isObject = function (x) { return typeof x === "object" && !isArray(x) && x !== null && x !== undefined; };
+  var isIterable = function (x) { return x != null && typeof x[Symbol.iterator] === "function" && !isString(x); };
+  var isObject = function (x) { return x != null && typeof x === "object" && !isArray(x) && !isIterable(x); };
 
   var getString = function (value) {
     var result = undefined;
@@ -52,7 +53,7 @@
   // Credit: JSnoX https://github.com/af/JSnoX/blob/master/jsnox.js
 
   // matches "input", "input:text"
-  var tagTypeRegex = /^([a-z1-6]+)(?::([a-z]+))?/;
+  var tagTypeRegex = /^([A-Za-z0-9-]+)(?::([a-z]+))?/;
 
   // matches "#id", ".class", "[name=value]", "[required]"
   var propsRegex = /((?:#|\.|@)[\w-]+)|(\[.*?\])/g;
@@ -127,13 +128,16 @@
     if ( result === void 0 ) result = [];
 
     rest.forEach(function (child) {
+      if (isIterable(child)) {
+        child = Array.from(child);
+      }
       // Text node
       if (getString(child)) {
         result.push(getString(child));
       }
       else if (isArray(child)) {
         // Nested array
-        if (isArray(child[0])) {
+        if (isArray(child[0]) || isIterable(child[0])) {
           processChildren(child, result);
         }
         // Regular node
@@ -214,6 +218,9 @@
         result.children = [ getString(rest) ];
       }
 
+      if (isIterable(rest)) {
+        rest = Array.from(rest);
+      }
       if (isArray(rest)) {
         // Array of children vs One child node
         result.children = processChildren( isArray(rest[0]) ? rest : [ rest ] );
@@ -223,7 +230,7 @@
   };
 
   var transformNodeDef = function (transform, def) {
-    if (isArray(def.children)) {
+    if (isArray(def.children) || isIterable(def.children)) {
       var result = [];
       def.children.forEach(function (child) {
         result.push(isString(child) ? transform(child) : transformNodeDef(transform, child));
