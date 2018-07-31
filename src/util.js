@@ -2,7 +2,8 @@ export const isString = x => typeof x === "string"
 export const isNumber = x => typeof x === "number"
 export const isBoolean = x => typeof x === "boolean"
 export const isArray = x => Array.isArray(x)
-export const isObject = x => typeof x === "object" && !isArray(x) && x !== null && x !== undefined
+export const isIterable = x => x != null && typeof x[Symbol.iterator] === "function" && !isString(x)
+export const isObject = x => x != null && typeof x === "object" && !isArray(x) && !isIterable(x)
 
 export const getString = value => {
   let result = undefined
@@ -47,7 +48,7 @@ export const set = (object, path, value) => {
 // Credit: JSnoX https://github.com/af/JSnoX/blob/master/jsnox.js
 
 // matches "input", "input:text"
-const tagTypeRegex = /^([a-z1-6]+)(?::([a-z]+))?/
+const tagTypeRegex = /^([A-Za-z1-6-]+)(?::([a-z]+))?/
 
 // matches "#id", ".class", "[name=value]", "[required]"
 const propsRegex = /((?:#|\.|@)[\w-]+)|(\[.*?\])/g
@@ -118,13 +119,16 @@ returns node definition, expanding on the above tag properties and adding to obt
 */
 const processChildren = (rest, result = []) => {
   rest.forEach(child => {
+    if (isIterable(child)) {
+      child = Array.from(child)
+    }
     // Text node
     if (getString(child)) {
       result.push(getString(child))
     }
     else if (isArray(child)) {
       // Nested array
-      if (isArray(child[0])) {
+      if (isArray(child[0]) || isIterable(child[0])) {
         processChildren(child, result)
       }
       // Regular node
@@ -203,6 +207,9 @@ export const nodeDef = (node, options = { className: "className" }) => {
       result.children = [ getString(rest) ]
     }
 
+    if (isIterable(rest)) {
+      rest = Array.from(rest)
+    }
     if (isArray(rest)) {
       // Array of children vs One child node
       result.children = processChildren( isArray(rest[0]) ? rest : [ rest ] )

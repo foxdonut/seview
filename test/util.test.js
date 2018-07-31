@@ -1,4 +1,4 @@
-import { isString, isNumber, isBoolean, isArray, isObject, get, set,
+import { isString, isNumber, isBoolean, isArray, isIterable, isObject, get, set,
   getString, getTagProperties, nodeDef } from "../src/util"
 
 const string = "test"
@@ -6,6 +6,7 @@ const number = 42
 const boolean = false
 const object = { key: "value" }
 const array = ["div", "test"]
+const iter = new Set(["div", "test"])
 const func = x => x
 
 export default {
@@ -28,6 +29,10 @@ export default {
     ],
     "false for array": [
       isString(array),
+      false
+    ],
+    "false for iterable": [
+      isString(iter),
       false
     ],
     "false for function": [
@@ -64,6 +69,10 @@ export default {
       isNumber(array),
       false
     ],
+    "false for iterable": [
+      isNumber(iter),
+      false
+    ],
     "false for function": [
       isNumber(func),
       false
@@ -96,6 +105,10 @@ export default {
     ],
     "false for array": [
       isBoolean(array),
+      false
+    ],
+    "false for iterable": [
+      isBoolean(iter),
       false
     ],
     "false for function": [
@@ -132,6 +145,10 @@ export default {
       isArray(array),
       true
     ],
+    "false for iterable": [
+      isArray(iter),
+      false
+    ],
     "false for function": [
       isArray(func),
       false
@@ -142,6 +159,44 @@ export default {
     ],
     "false for undefined": [
       isArray(undefined),
+      false
+    ]
+  },
+  isIterable: {
+    "false for string": [
+      isIterable(string),
+      false
+    ],
+    "false for number": [
+      isIterable(number),
+      false
+    ],
+    "false for boolean": [
+      isIterable(boolean),
+      false
+    ],
+    "false for object": [
+      isIterable(object),
+      false
+    ],
+    "false for array": [
+      isIterable(array),
+      true
+    ],
+    "true for Set": [
+      isIterable(iter),
+      true
+    ],
+    "false for function": [
+      isIterable(func),
+      false
+    ],
+    "false for null": [
+      isIterable(null),
+      false
+    ],
+    "false for undefined": [
+      isIterable(undefined),
       false
     ]
   },
@@ -164,6 +219,10 @@ export default {
     ],
     "false for array": [
       isObject(array),
+      false
+    ],
+    "false for iterable": [
+      isObject(iter),
       false
     ],
     "false for function": [
@@ -303,6 +362,27 @@ export default {
         children: [
           { tag: "div", children: ["test1"] },
           { tag: "div", children: ["test2"] }
+        ]
+      }
+    ],
+    uppercaseTag: [
+      nodeDef(["MY-DIV", "test"]),
+      {
+        tag: "MY-DIV",
+        children: ["test"]
+      }
+    ],
+    basicIterable: [
+      nodeDef(["div", { id: "test" }, new Set([
+        ["span[key=a]", "hi"],
+        ["span[key=b]", "bye"]
+      ])]),
+      {
+        tag: "div",
+        attrs: { id: "test" },
+        children: [
+          { tag: "span", attrs: { key: "a" },  children: ["hi"] },
+          { tag: "span", attrs: { key: "b" },  children: ["bye"] }
         ]
       }
     ],
