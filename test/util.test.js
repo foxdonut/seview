@@ -313,6 +313,13 @@ export default {
         attrs: { id: "home" }
       }
     ],
+    customTag: [
+      getTagProperties("my-tag09.home"),
+      {
+        tag: "my-tag09",
+        attrs: { className: "home" }
+      }
+    ],
     all: [
       getTagProperties("input:password#duck.quack.yellow[name=pwd][required]"),
       {

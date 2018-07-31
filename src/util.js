@@ -48,7 +48,7 @@ export const set = (object, path, value) => {
 // Credit: JSnoX https://github.com/af/JSnoX/blob/master/jsnox.js
 
 // matches "input", "input:text"
-const tagTypeRegex = /^([A-Za-z1-6-]+)(?::([a-z]+))?/
+const tagTypeRegex = /^([A-Za-z0-9-]+)(?::([a-z]+))?/
 
 // matches "#id", ".class", "[name=value]", "[required]"
 const propsRegex = /((?:#|\.|@)[\w-]+)|(\[.*?\])/g
