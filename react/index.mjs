@@ -1,5 +1,5 @@
-/* global React, sv */
-const h = sv(node => {
+/* global React, seview */
+const h = seview.sv(node => {
   if (typeof node === "string") {
     return node;
   }

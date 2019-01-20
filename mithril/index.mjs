@@ -1,4 +1,4 @@
-/* global m, sv */
+/* global m, seview */
 const processAttrs = (attrs = {}) => {
   Object.keys(attrs).forEach(key => {
     if (key.startsWith("on")) {
@@ -10,7 +10,7 @@ const processAttrs = (attrs = {}) => {
   return attrs;
 };
 
-const h = sv(node =>
+const h = seview.sv(node =>
   (typeof node === "string")
   ? { tag: "#", children: node }
   : node.attrs && node.attrs.innerHTML

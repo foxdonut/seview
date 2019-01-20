@@ -1,5 +1,5 @@
-/* global preact, sv */
-const h = sv(node => {
+/* global preact, seview */
+const h = seview.sv(node => {
   if (typeof node === "string") {
     return node;
   }
