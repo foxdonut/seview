@@ -1,6 +1,6 @@
 {
   "name": "seview",
-  "version": "0.12.0",
+  "version": "0.12.1",
   "description": "S-Expression View",
   "main": "dist/seview.js",
   "scripts": {
