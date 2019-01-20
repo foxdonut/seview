@@ -322,7 +322,7 @@ const h = sv(func, { className: "class" })
 This would use the `class` property in the `attrs` to indicate the CSS classes.
 
 So you need to write a snippet of code that you pass to `sv` to wire up `seview` with the virtual
-DOM library that you are using. Below, you will find examples for 8 libraries. Using a different
+DOM library that you are using. Below, you will find examples for 3 libraries. Using a different
 library is not difficult; you should get a pretty good idea of what to do from the examples below.
 
 In these examples, we assume writing views with the following attributes:
@@ -332,21 +332,26 @@ In these examples, we assume writing views with the following attributes:
 - `innerHTML` for using unescaped HTML
 - `onClick`, `onChange`, etc. for DOM events
 
-> You can also see `seview` as a way to use the same view code for different virtual DOM libraries
-by looking at the [seview + Meiosis examples](http://meiosis.js.org/examples/setup/index.html).
-
 Also, please note that the snippets below are just examples; feel free to change and adapt
-according to your specific needs. In fact, this is why these snippets are not included in
-`seview` or even as separate libraries. They are just a handful of code, and you might like
-to tweak the code to your preference.
+according to your specific needs. For your convenience, these snippets are available in 
+`seview`. They are just a handful of code, though, so feel free to copy them into your
+project and tweak the code to your preference.
 
 ## [React](https://reactjs.org/)
+
+You can import this snippet into your project with:
+
+```javascript
+import { h } from "seview/react";
+```
+
+The snippet is as follows:
 
 ```javascript
 import React from "react";
 import { sv } from "seview";
 
-const h = sv(node => {
+export const h = sv(node => {
   if (typeof node === "string") {
     return node;
   }
@@ -364,11 +369,19 @@ const h = sv(node => {
 
 ## [Preact](https://preactjs.com/)
 
+You can import this snippet into your project with:
+
+```javascript
+import { h } from "seview/preact";
+```
+
+The snippet is as follows:
+
 ```javascript
 import preact from "preact";
 import { sv } from "seview";
 
-const h = sv(node => {
+export const h = sv(node => {
   if (typeof node === "string") {
     return node;
   }
@@ -385,6 +398,14 @@ const h = sv(node => {
 
 ## [Mithril](http://mithril.js.org/)
 
+You can import this snippet into your project with:
+
+```javascript
+import { h } from "seview/mithril";
+```
+
+The snippet is as follows:
+
 ```javascript
 import m from "mithril";
 import { sv } from "seview";
@@ -400,7 +421,7 @@ const processAttrs = (attrs = {}) => {
   return attrs;
 };
 
-const h = sv(node =>
+export const h = sv(node =>
   (typeof node === "string")
   ? { tag: "#", children: node }
   : node.attrs && node.attrs.innerHTML
