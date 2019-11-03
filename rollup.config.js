@@ -34,26 +34,5 @@ export default [
       }),
       uglify()
     ]
-  }/*,
-  {
-    input: "./src/index.js",
-    output: [
-      {
-        file: "dist/seview.cjs.js",
-        name: "seview",
-        format: "cjs",
-      },
-      {
-        file: "dist/seview.es.js",
-        name: "seview",
-        format: "es",
-      }
-    ],
-    plugins: [
-      buble({
-        exclude: ["node_modules/**"]
-      })
-    ]
   }
-  */
 ]
