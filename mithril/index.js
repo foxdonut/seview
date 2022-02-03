@@ -10,7 +10,7 @@ const processAttrs = (attrs = {}) => {
     }
   })
   return attrs
-};
+}
 
 export const h = sv(node =>
   (typeof node === "string")
