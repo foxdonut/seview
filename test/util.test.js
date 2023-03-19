@@ -1,239 +1,241 @@
-import { isString, isNumber, isBoolean, isArray, isIterable, isObject, get, set,
-  getString, getTagProperties, nodeDef } from "../src/util"
+import {
+  isString, isNumber, isBoolean, isArray, isIterable, isObject, get, set,
+  getString, getTagProperties, nodeDef
+} from '../src/util';
 
-const string = "test"
-const number = 42
-const boolean = false
-const object = { key: "value" }
-const array = ["div", "test"]
-const iter = new Set(["div", "test"])
-const func = x => x
+const string = 'test';
+const number = 42;
+const boolean = false;
+const object = { key: 'value' };
+const array = ['div', 'test'];
+const iter = new Set(['div', 'test']);
+const func = (x) => x;
 
 export default {
   isString: {
-    "true for string": [
+    'true for string': [
       isString(string),
       true
     ],
-    "false for number": [
+    'false for number': [
       isString(number),
       false
     ],
-    "false for boolean": [
+    'false for boolean': [
       isString(boolean),
       false
     ],
-    "false for object": [
+    'false for object': [
       isString(object),
       false
     ],
-    "false for array": [
+    'false for array': [
       isString(array),
       false
     ],
-    "false for iterable": [
+    'false for iterable': [
       isString(iter),
       false
     ],
-    "false for function": [
+    'false for function': [
       isString(func),
       false
     ],
-    "false for null": [
+    'false for null': [
       isString(null),
       false
     ],
-    "false for undefined": [
+    'false for undefined': [
       isString(undefined),
       false
     ]
   },
   isNumber: {
-    "false for string": [
+    'false for string': [
       isNumber(string),
       false
     ],
-    "true for number": [
+    'true for number': [
       isNumber(number),
       true
     ],
-    "false for boolean": [
+    'false for boolean': [
       isNumber(boolean),
       false
     ],
-    "false for object": [
+    'false for object': [
       isNumber(object),
       false
     ],
-    "false for array": [
+    'false for array': [
       isNumber(array),
       false
     ],
-    "false for iterable": [
+    'false for iterable': [
       isNumber(iter),
       false
     ],
-    "false for function": [
+    'false for function': [
       isNumber(func),
       false
     ],
-    "false for null": [
+    'false for null': [
       isNumber(null),
       false
     ],
-    "false for undefined": [
+    'false for undefined': [
       isNumber(undefined),
       false
     ]
   },
   isBoolean: {
-    "false for string": [
+    'false for string': [
       isBoolean(string),
       false
     ],
-    "false for number": [
+    'false for number': [
       isBoolean(number),
       false
     ],
-    "true for boolean": [
+    'true for boolean': [
       isBoolean(boolean),
       true
     ],
-    "false for object": [
+    'false for object': [
       isBoolean(object),
       false
     ],
-    "false for array": [
+    'false for array': [
       isBoolean(array),
       false
     ],
-    "false for iterable": [
+    'false for iterable': [
       isBoolean(iter),
       false
     ],
-    "false for function": [
+    'false for function': [
       isBoolean(func),
       false
     ],
-    "false for null": [
+    'false for null': [
       isBoolean(null),
       false
     ],
-    "false for undefined": [
+    'false for undefined': [
       isBoolean(undefined),
       false
     ]
   },
   isArray: {
-    "false for string": [
+    'false for string': [
       isArray(string),
       false
     ],
-    "false for number": [
+    'false for number': [
       isArray(number),
       false
     ],
-    "false for boolean": [
+    'false for boolean': [
       isArray(boolean),
       false
     ],
-    "false for object": [
+    'false for object': [
       isArray(object),
       false
     ],
-    "true for array": [
+    'true for array': [
       isArray(array),
       true
     ],
-    "false for iterable": [
+    'false for iterable': [
       isArray(iter),
       false
     ],
-    "false for function": [
+    'false for function': [
       isArray(func),
       false
     ],
-    "false for null": [
+    'false for null': [
       isArray(null),
       false
     ],
-    "false for undefined": [
+    'false for undefined': [
       isArray(undefined),
       false
     ]
   },
   isIterable: {
-    "false for string": [
+    'false for string': [
       isIterable(string),
       false
     ],
-    "false for number": [
+    'false for number': [
       isIterable(number),
       false
     ],
-    "false for boolean": [
+    'false for boolean': [
       isIterable(boolean),
       false
     ],
-    "false for object": [
+    'false for object': [
       isIterable(object),
       false
     ],
-    "false for array": [
+    'false for array': [
       isIterable(array),
       true
     ],
-    "true for Set": [
+    'true for Set': [
       isIterable(iter),
       true
     ],
-    "false for function": [
+    'false for function': [
       isIterable(func),
       false
     ],
-    "false for null": [
+    'false for null': [
       isIterable(null),
       false
     ],
-    "false for undefined": [
+    'false for undefined': [
       isIterable(undefined),
       false
     ]
   },
   isObject: {
-    "false for string": [
+    'false for string': [
       isObject(string),
       false
     ],
-    "false for number": [
+    'false for number': [
       isObject(number),
       false
     ],
-    "false for boolean": [
+    'false for boolean': [
       isObject(boolean),
       false
     ],
-    "true for object": [
+    'true for object': [
       isObject(object),
       true
     ],
-    "false for array": [
+    'false for array': [
       isObject(array),
       false
     ],
-    "false for iterable": [
+    'false for iterable': [
       isObject(iter),
       false
     ],
-    "false for function": [
+    'false for function': [
       isObject(func),
       false
     ],
-    "false for null": [
+    'false for null': [
       isObject(null),
       false
     ],
-    "false for undefined": [
+    'false for undefined': [
       isObject(undefined),
       false
     ]
@@ -244,301 +246,314 @@ export default {
       string
     ],
     excluded: [
-      [ getString(undefined), getString(null), getString(""), getString(false), getString(["test"]), getString({ id: "test" }) ],
-      [ undefined, undefined, undefined, undefined, undefined, undefined ]
+      [
+        getString(undefined),
+        getString(null),
+        getString(''),
+        getString(false),
+        getString(['test']),
+        getString({ id: 'test' })
+      ],
+      [undefined, undefined, undefined, undefined, undefined, undefined]
     ],
     included: [
-      [ getString(42), getString(NaN), getString(Infinity), getString(true) ],
-      [ "42", "NaN", "Infinity", "true" ]
+      [getString(42), getString(NaN), getString(Infinity), getString(true)],
+      ['42', 'NaN', 'Infinity', 'true']
     ]
   },
   get: {
     basic: [
-      get({ tag: "div" }, ["tag"]),
-      "div"
+      get({ tag: 'div' }, ['tag']),
+      'div'
     ],
     deep: [
-      get({ attrs: { onClick: func } }, ["attrs", "onClick"]),
+      get({ attrs: { onClick: func } }, ['attrs', 'onClick']),
       func
     ],
     noValue: [
-      get({ tag: "div" }, ["type"]),
+      get({ tag: 'div' }, ['type']),
       undefined
     ],
     noPath: [
-      get({ tag: "div" }, ["type", "value"]),
+      get({ tag: 'div' }, ['type', 'value']),
       undefined
     ]
   },
   set: {
     basic: [
-      set({ tag: "div" }, ["tag"], "span"),
-      { tag: "span" }
+      set({ tag: 'div' }, ['tag'], 'span'),
+      { tag: 'span' }
     ],
     deep: [
-      set({ attrs: { onClick: null } }, ["attrs", "onClick"], func),
+      set({ attrs: { onClick: null } }, ['attrs', 'onClick'], func),
       { attrs: { onClick: func } }
     ],
     noValue: [
-      set({ tag: "input" }, ["type"], "password"),
-      { tag: "input", type: "password" }
+      set({ tag: 'input' }, ['type'], 'password'),
+      { tag: 'input', type: 'password' }
     ],
     noPath: [
-      set({ tag: "input" }, ["attrs", "type"], "password"),
-      { tag: "input", attrs: { type: "password" } }
+      set({ tag: 'input' }, ['attrs', 'type'], 'password'),
+      { tag: 'input', attrs: { type: 'password' } }
     ],
     merge: [
-      set({ tag: "input", props: { id: "test" } }, ["props", "children"], ["test"]),
-      { tag: "input", props: { id: "test", children: ["test"] } }
+      set({ tag: 'input', props: { id: 'test' } }, ['props', 'children'], ['test']),
+      { tag: 'input', props: { id: 'test', children: ['test'] } }
     ]
   },
   getTagProperties: {
     divByDefault: [
-      getTagProperties(""),
+      getTagProperties(''),
       {
-        tag: "div"
+        tag: 'div'
       }
     ],
     divByDefaultWithClass: [
-      getTagProperties(".btn"),
+      getTagProperties('.btn'),
       {
-        tag: "div",
-        attrs: { className: "btn" }
+        tag: 'div',
+        attrs: { class: 'btn' }
       }
     ],
     divByDefaultWithId: [
-      getTagProperties("#home"),
+      getTagProperties('#home'),
       {
-        tag: "div",
-        attrs: { id: "home" }
+        tag: 'div',
+        attrs: { id: 'home' }
       }
     ],
     customTag: [
-      getTagProperties("my-tag09.home"),
+      getTagProperties('my-tag09.home'),
       {
-        tag: "my-tag09",
-        attrs: { className: "home" }
+        tag: 'my-tag09',
+        attrs: { class: 'home' }
       }
     ],
     all: [
-      getTagProperties("input:password#duck.quack.yellow[name=pwd][required]"),
+      getTagProperties('input:password#duck.quack.yellow[name=pwd][required]'),
       {
-        tag: "input",
-        attrs: { type: "password", id: "duck", className: "quack yellow", name: "pwd", required: true }
+        tag: 'input',
+        attrs: {
+          type: 'password',
+          id: 'duck',
+          class: 'quack yellow',
+          name: 'pwd',
+          required: true
+        }
       }
     ],
     valueWithSpaces: [
-      getTagProperties("input[placeholder=Enter your name here]"),
+      getTagProperties('input[placeholder=Enter your name here]'),
       {
-        tag: "input",
-        attrs: { placeholder: "Enter your name here" }
+        tag: 'input',
+        attrs: { placeholder: 'Enter your name here' }
       }
     ],
     extraTypesIgnored: [
-      getTagProperties("input:text:password.form-input"),
+      getTagProperties('input:text:password.form-input'),
       {
-        tag: "input",
-        attrs: { type: "text", className: "form-input" }
+        tag: 'input',
+        attrs: { type: 'text', class: 'form-input' }
       }
     ],
-    optionForClassName: [
-      getTagProperties("input.form-input", "class"),
+    optionForClass: [
+      getTagProperties('input.form-input', 'class'),
       {
-        tag: "input",
-        attrs: { class: "form-input" }
+        tag: 'input',
+        attrs: { class: 'form-input' }
       }
     ]
   },
   nodeDef: {
     basicText: [
-      nodeDef(["div", { width: "100%" }, "test"]),
+      nodeDef(['div', { width: '100%' }, 'test']),
       {
-        tag: "div",
-        attrs: { width: "100%" },
-        children: ["test"]
+        tag: 'div',
+        attrs: { width: '100%' },
+        children: ['test']
       }
     ],
     basicChildren: [
-      nodeDef(["div", { id: "test" }, [
-        ["div", "test1"],
-        ["div", "test2"]
+      nodeDef(['div', { id: 'test' }, [
+        ['div', 'test1'],
+        ['div', 'test2']
       ]]),
       {
-        tag: "div",
-        attrs: { id: "test" },
+        tag: 'div',
+        attrs: { id: 'test' },
         children: [
-          { tag: "div", children: ["test1"] },
-          { tag: "div", children: ["test2"] }
+          { tag: 'div', children: ['test1'] },
+          { tag: 'div', children: ['test2'] }
         ]
       }
     ],
     uppercaseTag: [
-      nodeDef(["MY-DIV", "test"]),
+      nodeDef(['MY-DIV', 'test']),
       {
-        tag: "MY-DIV",
-        children: ["test"]
+        tag: 'MY-DIV',
+        children: ['test']
       }
     ],
     basicIterable: [
-      nodeDef(["div", { id: "test" }, new Set([
-        ["span[key=a]", "hi"],
-        ["span[key=b]", "bye"]
+      nodeDef(['div', { id: 'test' }, new Set([
+        ['span[key=a]', 'hi'],
+        ['span[key=b]', 'bye']
       ])]),
       {
-        tag: "div",
-        attrs: { id: "test" },
+        tag: 'div',
+        attrs: { id: 'test' },
         children: [
-          { tag: "span", attrs: { key: "a" },  children: ["hi"] },
-          { tag: "span", attrs: { key: "b" },  children: ["bye"] }
+          { tag: 'span', attrs: { key: 'a' }, children: ['hi'] },
+          { tag: 'span', attrs: { key: 'b' }, children: ['bye'] }
         ]
       }
     ],
     nestedArrays: [
-      nodeDef(["div", [
-        ["div", "test1"],
+      nodeDef(['div', [
+        ['div', 'test1'],
         [
-          ["div", "test2"],
-          ["div", "test3"]
+          ['div', 'test2'],
+          ['div', 'test3']
         ],
         [],
-        [ [] ],
+        [[]],
         [
-          ["div", "test4"],
+          ['div', 'test4'],
           [
-            ["div", "test5"]
+            ['div', 'test5']
           ]
         ]
       ]]),
       {
-        tag: "div",
+        tag: 'div',
         children: [
-          { tag: "div", children: ["test1"] },
-          { tag: "div", children: ["test2"] },
-          { tag: "div", children: ["test3"] },
-          { tag: "div", children: ["test4"] },
-          { tag: "div", children: ["test5"] }
+          { tag: 'div', children: ['test1'] },
+          { tag: 'div', children: ['test2'] },
+          { tag: 'div', children: ['test3'] },
+          { tag: 'div', children: ['test4'] },
+          { tag: 'div', children: ['test5'] }
         ]
       }
     ],
     nestedArraysVarargs: [
-      nodeDef(["div",
-        ["div", "test1"],
+      nodeDef(['div',
+        ['div', 'test1'],
         [
-          ["div", "test2"],
-          ["div", "test3"]
+          ['div', 'test2'],
+          ['div', 'test3']
         ],
         [],
-        [ [] ],
+        [[]],
         [
-          ["div", "test4"],
+          ['div', 'test4'],
           [
-            ["div", "test5"]
+            ['div', 'test5']
           ]
-        ]
-      ]),
+        ]]),
       {
-        tag: "div",
+        tag: 'div',
         children: [
-          { tag: "div", children: ["test1"] },
-          { tag: "div", children: ["test2"] },
-          { tag: "div", children: ["test3"] },
-          { tag: "div", children: ["test4"] },
-          { tag: "div", children: ["test5"] }
+          { tag: 'div', children: ['test1'] },
+          { tag: 'div', children: ['test2'] },
+          { tag: 'div', children: ['test3'] },
+          { tag: 'div', children: ['test4'] },
+          { tag: 'div', children: ['test5'] }
         ]
       }
     ],
     justATag: [
-      nodeDef(["hr"]),
-      { tag: "hr" }
+      nodeDef(['hr']),
+      { tag: 'hr' }
     ],
     tagWithNumber: [
-      nodeDef(["span", 0]),
-      { tag: "span", children: ["0"] }
+      nodeDef(['span', 0]),
+      { tag: 'span', children: ['0'] }
     ],
     oneVarArg: [
-      nodeDef(["div",
-        ["div", "test1"]
-      ]),
+      nodeDef(['div',
+        ['div', 'test1']]),
       {
-        tag: "div",
+        tag: 'div',
         children: [
-          { tag: "div", children: ["test1"] }
+          { tag: 'div', children: ['test1'] }
         ]
       }
     ],
     mixedChildrenVarArgs: [
-      nodeDef(["div",
-        "text 1",
+      nodeDef(['div',
+        'text 1',
         42,
         undefined,
         null,
         false,
         [],
         [[]],
-        "",
+        '',
         true,
         NaN,
         Infinity,
-        ["b", "in bold"]
-      ]),
+        ['b', 'in bold']]),
       {
-        tag: "div",
+        tag: 'div',
         children: [
-          "text 1",
-          "42",
-          "true",
-          "NaN",
-          "Infinity",
-          { tag: "b", children: ["in bold"] }
+          'text 1',
+          '42',
+          'true',
+          'NaN',
+          'Infinity',
+          { tag: 'b', children: ['in bold'] }
         ]
       }
     ],
     combineAttrs: [
-      nodeDef(["input[name=duck]", { value: "quack" }]),
+      nodeDef(['input[name=duck]', { value: 'quack' }]),
       {
-        tag: "input",
-        attrs: { name: "duck", value: "quack" }
+        tag: 'input',
+        attrs: { name: 'duck', value: 'quack' }
       }
     ],
     combineAttrsOverride: [
-      nodeDef(["input:text#one[name=horse]", { type: "password", id: "two", name: "duck" }]),
+      nodeDef(['input:text#one[name=horse]', { type: 'password', id: 'two', name: 'duck' }]),
       {
-        tag: "input",
-        attrs: { type: "password", id: "two", name: "duck" }
+        tag: 'input',
+        attrs: { type: 'password', id: 'two', name: 'duck' }
       }
     ],
-    combineClassName: [
-      nodeDef(["button.btn", { className: "btn-default other" }]),
+    combineClass: [
+      nodeDef(['button.btn', { class: 'btn-default other' }]),
       {
-        tag: "button",
-        attrs: { className: "btn btn-default other" }
+        tag: 'button',
+        attrs: { class: 'btn btn-default other' }
       }
     ],
-    combineClassNameWithDifferentProp: [
-      nodeDef(["button.btn", { class: "btn-default other" }], { className: "class" }),
+    combineClassWithDifferentProp: [
+      nodeDef(['button.btn', { class: 'btn-default other' }], { class: 'class' }),
       {
-        tag: "button",
-        attrs: { class: "btn btn-default other" }
+        tag: 'button',
+        attrs: { class: 'btn btn-default other' }
       }
     ],
-    classNameToggles: [
-      nodeDef(["button.btn", { className: { "btn-primary": true, "btn-default": false }}]),
+    classToggles: [
+      nodeDef(['button.btn', { class: { 'btn-primary': true, 'btn-default': false } }]),
       {
-        tag: "button",
-        attrs: { className: "btn btn-primary" }
+        tag: 'button',
+        attrs: { class: 'btn btn-primary' }
       }
     ],
-    classNameTogglesFalsy: [
-      nodeDef(["button.btn", { className: { "btn-primary": true, "one": null, "two": undefined, "three": 0 }}]),
+    classTogglesFalsy: [
+      nodeDef([
+        'button.btn',
+        { class: { 'btn-primary': true, 'one': null, 'two': undefined, 'three': 0 } }
+      ]),
       {
-        tag: "button",
-        attrs: { className: "btn btn-primary" }
+        tag: 'button',
+        attrs: { class: 'btn btn-primary' }
       }
     ],
     events: [
-      nodeDef(["button", { onClick: func, onBlur: func }]),
+      nodeDef(['button', { onClick: func, onBlur: func }]),
       {
-        tag: "button",
+        tag: 'button',
         attrs: {
           onClick: func,
           onBlur: func
@@ -546,24 +561,24 @@ export default {
       }
     ],
     functionTag: [
-      nodeDef([func, { name: "test" }, [func, { id: "child" }]]),
+      nodeDef([func, { name: 'test' }, [func, { id: 'child' }]]),
       {
         tag: func,
-        attrs: { name: "test" },
+        attrs: { name: 'test' },
         children: [
-          { tag: func, attrs: { id: "child" } }
+          { tag: func, attrs: { id: 'child' } }
         ]
       }
     ],
     objectTag: [
-      nodeDef([object, { name: "test" }, [object, { id: "child" }]]),
+      nodeDef([object, { name: 'test' }, [object, { id: 'child' }]]),
       {
         tag: object,
-        attrs: { name: "test" },
+        attrs: { name: 'test' },
         children: [
-          { tag: object, attrs: { id: "child" } }
+          { tag: object, attrs: { id: 'child' } }
         ]
       }
     ]
   }
-}
+};

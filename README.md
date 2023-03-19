@@ -5,10 +5,9 @@ and meant to be used with a virtual DOM library.
 
 ## Why?
 
-Because plain JavaScript is simpler to write and build than JSX, and it's great to
-write views in a way that is independent of the virtual DOM library being used.
-It's also nice to use convenient features even if the underlying virtual DOM library
-does not support them.
+Because plain JavaScript is simpler to write and build than JSX or HTML string literals, and it's
+great to write views in a way that is independent of the virtual DOM library being used. It's also
+nice to use convenient features even if the underlying virtual DOM library does not support them.
 
 ## Example
 
@@ -25,20 +24,20 @@ Instead of writing this in JSX:
 Or even this in hyperscript:
 
 ```javascript
-h("div", { id: "home" }, [
-  h("span", { className: "instruction" }, "Enter your name:"),
-  h("input", { type: "text", id: "username", name: "username", size: 10 }),
-  isMessage && h("div", { className: "message" + (isError ? " error" : "") }, message)
+h('div', { id: 'home' }, [
+  h('span', { className: 'instruction' }, 'Enter your name:'),
+  h('input', { type: 'text', id: 'username', name: 'username', size: 10 }),
+  isMessage && h('div', { className: 'message' + (isError ? ' error' : '') }, message)
 ])
 ```
 
 You can write this with `seview`:
 
 ```javascript
-["div#home",
-  ["span.instruction", "Enter your name:"],
-  ["input:text#username[name=username][size=10]"],
-  isMessage && ["div.message", { className: { "error": isError } }, message]
+['div#home',
+  ['span.instruction', 'Enter your name:'],
+  ['input:text#username[name=username][size=10]'],
+  isMessage && ['div.message', { class: { 'error': isError } }, message]
 ]
 ```
 
@@ -52,8 +51,8 @@ virtual DOM library API.
 
 ## Features
 
-`seview` supports CSS-style selectors in tag names, `{ className: boolean }` for toggling classes,
-using an array or varags for children, flattening of nested arrays, and removal of null/empty elements.
+`seview` supports CSS-style selectors in tag names, `{ class: boolean }` for toggling classes, using
+an array or varags for children, flattening of nested arrays, and removal of null/empty elements.
 
 ### Element
 
@@ -66,7 +65,7 @@ An element is an array:
 or a string (text node):
 
 ```
-"this is a text node"
+'this is a text node'
 ```
 
 The `tag` can be a string, or something that your virtual DOM library understands; for example,
@@ -76,16 +75,16 @@ a `Component` in React. For the latter, `seview` just returns the selector as-is
 
 When the tag is a string, it is assumed to be a tag name, possibly with CSS-style selectors:
 
-- `"div"`, `"span"`, `"h1"`, `"input"`, etc.
-- `"div.highlighted"`, `"button.btn.btn-default"` for classes
-- `"div#home"` for `id`
-- `"input:text"` for `<input type="text">`. There can only be one type, so additional types are
-ignored. `"input:password:text"` would result in `<input type="password">`.
-- `"input[name=username][required]"` results in `<input name="username" required="true">`
-- if you need spaces, just use them: `"input[placeholder=Enter your name here]"`
-- default tag is `"div"`, so you can write `""`, `".highlighted"`, `"#home"`, etc.
+- `'div'`, `'span'`, `'h1'`, `'input'`, etc.
+- `'div.highlighted'`, `'button.btn.btn-default'` for classes
+- `'div#home'` for `id`
+- `'input:text'` for `<input type="text">`. There can only be one type, so additional types are
+ignored. `'input:password:text'` would result in `<input type="password">`.
+- `'input[name=username][required]'` results in `<input name="username" required="true">`
+- if you need spaces, just use them: `'input[placeholder=Enter your name here]'`
+- default tag is `'div'`, so you can write `''`, `'.highlighted'`, `'#home'`, etc.
 - these features can all be used together, for example
-  `"input:password#duck.quack.yellow[name=pwd][required]"` results in
+  `'input:password#duck.quack.yellow[name=pwd][required]'` results in
   `<input type="password" id="duck" class="quack yellow" name="pwd" required="true">`
 
 ### Attributes
@@ -96,21 +95,21 @@ Of course, for everything that you can do with a CSS-style selector in a tag as 
 previous section, you can also use attributes:
 
 ```javascript
-["input", { type: "password", name: "password", placeholder: "Enter your password here" }]
+['input', { type: 'password', name: 'password', placeholder: 'Enter your password here' }]
 ```
 
 You can also mix selectors and attributes. If you specify something in both places, the attribute
 overwrites the selector.
 
 ```javascript
-["input:password[name=password]", { placeholder: "Enter your password here" }]
+['input:password[name=password]', { placeholder: 'Enter your password here' }]
 ```
 ```html
 <input type="password" name="password" placeholder="Enter password name here">
 ```
 
 ```javascript
-["input:password[name=username]", { type: "text", placeholder: "Enter your username here" }]
+['input:password[name=username]', { type: 'text', placeholder: 'Enter your username here' }]
 ```
 ```html
 <input type="text" name="username" placeholder="Enter your username here">
@@ -119,29 +118,26 @@ overwrites the selector.
 ### Classes
 
 Classes can be specified in the tag as a selector (as shown above), and/or in attributes using
-`className`:
+`class`:
 
 ```javascript
-["button.btn.info", { className: "btn-default special" }]
+['button.btn.info', { class: 'btn-default special' }]
 ```
 ```html
 <button class="btn info btn-default special">
 ```
 
-If you specify an object instead of a string for `className`, the keys are classes and the values
+If you specify an object instead of a string for `class`, the keys are classes and the values
 indicate whether or not to include the class. The class is only included if the value is truthy.
 
 ```javascript
 // isDefault is true
 // isError is false
-["button.btn", { className: { "btn-default": isDefault, "error": isError } }]
+['button.btn', { class: { 'btn-default': isDefault, 'error': isError } }]
 ```
 ```html
 <button class="btn btn-default">
 ```
-
-Note that `className` is the default key, but this can be configured to be something else, such
-as `class`.
 
 ### Children (array or varags)
 
@@ -156,9 +152,9 @@ third if attributes are present), are the children. The children can be:
 You can specify children as an array:
 
 ```javascript
-["div", [
-  ["span", ["Hello"]],
-  ["b", ["World"]]
+['div', [
+  ['span', ['Hello']],
+  ['b', ['World']]
 ]
 ```
 ```html
@@ -173,9 +169,9 @@ You can specify children as an array:
 You can specify children as varargs:
 
 ```javascript
-["div",
-  ["span", "Hello"],
-  ["b", "World"]
+['div',
+  ['span', 'Hello'],
+  ['b', 'World']
 ]
 ```
 ```html
@@ -192,19 +188,19 @@ The problem with supporting varargs is, how do you differentiate a single elemen
 For example:
 
 ```js
-["div", ["b", "hello"]]
+['div', ['b', 'hello']]
 ```
 
 vs
 
 ```js
-["div", ["hello", "there"]]
+['div', ['hello', 'there']]
 ```
 
 For the second case, varargs **must** be used:
 
 ```js
-["div", "hello", "there"]
+['div', 'hello', 'there']
 ```
 
 ### Flattened arrays
@@ -212,12 +208,12 @@ For the second case, varargs **must** be used:
 Whether using an array of children or varargs, nested arrays are automatically flattened:
 
 ```javascript
-["div", [
-  ["div", "one"],
+['div', [
+  ['div', 'one'],
   [
-    ["div", "two"],
+    ['div', 'two'],
     [
-      ["div", "three"]
+      ['div', 'three']
     ]
   ]
 ]]
@@ -226,12 +222,12 @@ Whether using an array of children or varargs, nested arrays are automatically f
 or
 
 ```javascript
-["div",
-  ["div", "one"],
+['div',
+  ['div', 'one'],
   [
-    ["div", "two"],
+    ['div', 'two'],
     [
-      ["div", "three"]
+      ['div', 'three']
     ]
   ]
 ]
@@ -254,13 +250,13 @@ The following elements are ignored and not included in the output:
 - `undefined`
 - `null`
 - `false`
-- `""`
+- `''`
 - `[]`
 
 This makes it simple to conditionally include an element by writing:
 
 ```javascript
-condition && ["div", "message"]
+condition && ['div', 'message']
 ```
 
 If `condition` is falsy, the `div` will not be included in the output. Because it is completely
@@ -292,18 +288,18 @@ With a script tag:
 
 ## Usage
 
-`seview` exports a single function, `sv`, that you use to obtain a function which you can name
+`seview` exports a single function, `seview`, that you use to obtain a function which you can name
 as you wish; in the examples, I name this function `h`. Calling `h(view)`, where `view` is the view
 expressed as arrays as we have seen above, produces the final result suitable for your virtual DOM
 library.
 
-When you call `sv`, you pass it a function that gets called for every node in the view. Each
+When you call `seview`, you pass it a function that gets called for every node in the view. Each
 node has the following structure:
 
 ```javascript
 {
-  tag: "button",
-  attrs: { id: "save", className: "btn btn-default", ... }
+  tag: 'button',
+  attrs: { id: 'save', class: 'btn btn-default', ... }
   children: [ ... ]
 }
 ```
@@ -312,25 +308,17 @@ The function that you write needs to convert the structure above to what is expe
 virtual DOM library that you are using. Note that your function will also be called for each
 element in `children`.
 
-You can optionally pass a second parameter to `sv` to indicate something other than `className`
-as the property to use for CSS classes. For example:
-
-```javascript
-const h = sv(func, { className: "class" })
-```
-
-This would use the `class` property in the `attrs` to indicate the CSS classes.
-
-So you need to write a snippet of code that you pass to `sv` to wire up `seview` with the virtual
-DOM library that you are using. Below, you will find examples for 3 libraries. Using a different
-library is not difficult; you should get a pretty good idea of what to do from the examples below.
+So you need to write a snippet of code that you pass to `seview` to wire up `seview` with the
+virtual DOM library that you are using. Below, you will find examples for 3 libraries. Using a
+different library is not difficult; you should get a pretty good idea of what to do from the
+examples below.
 
 In these examples, we assume writing views with the following attributes:
 
-- `className` for the HTML `class` attribute
-- `htmlFor` for the HTML `for` attribute
+- `class` for the HTML `class` attribute, to be converted to `className` for React
+- `for` for the HTML `for` attribute, to be converted to `htmlFor` for React
 - `innerHTML` for using unescaped HTML
-- `onClick`, `onChange`, etc. for DOM events
+- `onClick`, `onChange`, etc. for DOM events, to be converted to lowercase for Mithril
 
 Also, please note that the snippets below are just examples; feel free to change and adapt
 according to your specific needs. For your convenience, these snippets are available in
@@ -342,17 +330,17 @@ project and tweak the code to your preference.
 You can import this snippet into your project with:
 
 ```javascript
-import { h } from "seview/react";
+import { h } from 'seview/react';
 ```
 
 The snippet is as follows:
 
 ```javascript
-import React from "react";
-import { sv } from "seview";
+import React from 'react';
+import { seview } from 'seview';
 
-export const h = sv(node => {
-  if (typeof node === "string") {
+export const h = seview(node => {
+  if (typeof node === 'string') {
     return node;
   }
   const attrs = node.attrs || {};
@@ -372,17 +360,17 @@ export const h = sv(node => {
 You can import this snippet into your project with:
 
 ```javascript
-import { h } from "seview/preact";
+import { h } from 'seview/preact';
 ```
 
 The snippet is as follows:
 
 ```javascript
-import preact from "preact";
-import { sv } from "seview";
+import preact from 'preact';
+import { seview } from 'seview';
 
-export const h = sv(node => {
-  if (typeof node === "string") {
+export const h = seview(node => {
+  if (typeof node === 'string') {
     return node;
   }
   const attrs = node.attrs || {};
@@ -401,18 +389,18 @@ export const h = sv(node => {
 You can import this snippet into your project with:
 
 ```javascript
-import { h } from "seview/mithril";
+import { h } from 'seview/mithril';
 ```
 
 The snippet is as follows:
 
 ```javascript
-import m from "mithril";
-import { sv } from "seview";
+import m from 'mithril';
+import { seview } from 'seview';
 
 const processAttrs = (attrs = {}) => {
   Object.keys(attrs).forEach(key => {
-    if (key.startsWith("on")) {
+    if (key.startsWith('on')) {
       const value = attrs[key];
       delete attrs[key];
       attrs[key.toLowerCase()] = value;
@@ -421,9 +409,9 @@ const processAttrs = (attrs = {}) => {
   return attrs;
 };
 
-export const h = sv(node =>
-  (typeof node === "string")
-  ? { tag: "#", children: node }
+export const h = seview(node =>
+  (typeof node === 'string')
+  ? { tag: '#', children: node }
   : node.attrs && node.attrs.innerHTML
     ? m(node.tag, m.trust(node.attrs.innerHTML))
     : m(node.tag, processAttrs(node.attrs), node.children || [])

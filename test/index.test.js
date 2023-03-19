@@ -1,209 +1,205 @@
-import { sv } from "../src/index"
-import { isString } from "../src/util"
+import { seview } from '../src/index';
+import { isString } from '../src/util';
 
-const transform = node => {
+const transform = (node) => {
   if (isString(node)) {
-    return node
+    return node;
   }
-  const children = node.children || []
-  const childrenObj = children.length > 0 ? { children } : {}
+  const children = node.children || [];
+  const childrenObj = children.length > 0 ? { children } : {};
 
   return {
     type: node.tag,
-    props: Object.assign({}, node.attrs, childrenObj )
-  }
-}
+    props: Object.assign({}, node.attrs, childrenObj)
+  };
+};
 
-const h = sv(transform)
-const k = sv(transform, { className: "class" })
+const h = seview(transform);
 
-const p = sv(node => {
+const p = seview((node) => {
   if (isString(node)) {
-    return node
+    return node;
   }
   const result = {
     nodeName: node.tag
-  }
+  };
   if (node.attrs) {
-    result.attributes = node.attrs
+    result.attributes = node.attrs;
   }
   if (node.children) {
-    result.subs = node.children
+    result.subs = node.children;
   }
-  return result
-})
+  return result;
+});
 
-const f = sv(node => {
+const f = seview((node) => {
   if (isString(node)) {
     return {
-      type: "#text",
+      type: '#text',
       nodeValue: node
-    }
+    };
   }
   return {
     type: node.tag,
     attributes: node.attrs || {},
     content: node.children || []
-  }
-})
+  };
+});
 
 export default {
   basicText: [
-    h(["div", { id: "test" }, "test"]),
+    h(['div', { id: 'test' }, 'test']),
     {
-      type: "div",
-      props: { id: "test", children: ["test"] }
+      type: 'div',
+      props: { id: 'test', children: ['test'] }
     }
   ],
   basicChildren: [
-    h(["div", { id: "test" }, [
-      ["div", {}, "test1"],
-      ["div", {}, "test2"]
+    h(['div', { id: 'test' }, [
+      ['div', {}, 'test1'],
+      ['div', {}, 'test2']
     ]]),
     {
-      type: "div",
+      type: 'div',
       props: {
-        id: "test",
+        id: 'test',
         children: [
-          { type: "div", props: { children: ["test1"] } },
-          { type: "div", props: { children: ["test2"] } }
+          { type: 'div', props: { children: ['test1'] } },
+          { type: 'div', props: { children: ['test2'] } }
         ]
       }
     }
   ],
   justATag: [
-    h(["hr"]),
-    { type: "hr", props: {} }
+    h(['hr']),
+    { type: 'hr', props: {} }
   ],
   optionalAttrs: [
-    h(["div", "test"]),
-    { type: "div", props: { children: ["test"] } }
+    h(['div', 'test']),
+    { type: 'div', props: { children: ['test'] } }
   ],
   optionalAttrsChildren: [
-    h(["div", [
-      ["div", "test1"],
-      ["div", "test2"]
+    h(['div', [
+      ['div', 'test1'],
+      ['div', 'test2']
     ]]),
     {
-      type: "div",
-      props: { children: [
-        { type: "div", props: { children: ["test1"] } },
-        { type: "div", props: { children: ["test2"] } }
-      ] }
+      type: 'div',
+      props: {
+        children: [
+          { type: 'div', props: { children: ['test1'] } },
+          { type: 'div', props: { children: ['test2'] } }
+        ]
+      }
     }
   ],
-  combineClassName: [
-    h(["button.btn", { className: "btn-default other" }]),
+  combineClass: [
+    h(['button.btn', { class: 'btn-default other' }]),
     {
-      type: "button",
-      props: { className: "btn btn-default other" }
+      type: 'button',
+      props: { class: 'btn btn-default other' }
     }
   ],
-  combineClassNameWithDifferentProp: [
-    k(["button.btn", { class: "btn-default other" }], { className: "class" }),
+  combineClassWithDifferentProp: [
+    h(['button.btn', { class: 'btn-default other' }], { class: 'class' }),
     {
-      type: "button",
-      props: { class: "btn btn-default other" }
+      type: 'button',
+      props: { class: 'btn btn-default other' }
     }
   ],
-  classNameToggles: [
-    h(["button.btn", { className: { "btn-primary": true, "btn-default": false }}]),
+  classToggles: [
+    h(['button.btn', { class: { 'btn-primary': true, 'btn-default': false } }]),
     {
-      type: "button",
-      props: { className: "btn btn-primary" }
+      type: 'button',
+      props: { class: 'btn btn-primary' }
     }
   ],
-  classNameTogglesFalsy: [
-    h(["button.btn", { className: { "btn-primary": true, "one": null, "two": undefined, "three": 0 }}]),
+  classTogglesFalsy: [
+    h(['button.btn',
+      { class: { 'btn-primary': true, 'one': null, 'two': undefined, 'three': 0 } }]),
     {
-      type: "button",
-      props: { className: "btn btn-primary" }
+      type: 'button',
+      props: { class: 'btn btn-primary' }
     }
   ],
   basicVarArgs: [
-    p(["div", {},
-      ["div", "test1"],
-      ["div", "test2"]
-    ]),
+    p(['div', {},
+      ['div', 'test1'],
+      ['div', 'test2']]),
     {
-      nodeName: "div",
+      nodeName: 'div',
       subs: [
-        { nodeName: "div", subs: ["test1"] },
-        { nodeName: "div", subs: ["test2"] }
+        { nodeName: 'div', subs: ['test1'] },
+        { nodeName: 'div', subs: ['test2'] }
       ]
     }
   ],
   varArgsNoAttrs: [
-    p(["div",
-      ["div", "test1"],
-      ["div", "test2"]
-    ]),
+    p(['div',
+      ['div', 'test1'],
+      ['div', 'test2']]),
     {
-      nodeName: "div",
+      nodeName: 'div',
       subs: [
-        { nodeName: "div", subs: ["test1"] },
-        { nodeName: "div", subs: ["test2"] }
+        { nodeName: 'div', subs: ['test1'] },
+        { nodeName: 'div', subs: ['test2'] }
       ]
     }
   ],
   oneVarArg: [
-    p(["div",
-      ["div", "test1"]
-    ]),
+    p(['div',
+      ['div', 'test1']]),
     {
-      nodeName: "div",
+      nodeName: 'div',
       subs: [
-        { nodeName: "div", subs: ["test1"] }
+        { nodeName: 'div', subs: ['test1'] }
       ]
     }
   ],
   mixedChildrenVarArgs: [
-    p(["div",
-      "text 1",
-      ["b", "in bold"]
-    ]),
+    p(['div',
+      'text 1',
+      ['b', 'in bold']]),
     {
-      nodeName: "div",
+      nodeName: 'div',
       subs: [
-        "text 1",
-        { nodeName: "b", subs: ["in bold"] }
+        'text 1',
+        { nodeName: 'b', subs: ['in bold'] }
       ]
     }
   ],
   mixedChildrenArray: [
-    p(["div", [
-      ["b", "in bold"],
-      "text 2"
+    p(['div', [
+      ['b', 'in bold'],
+      'text 2'
     ]]),
     {
-      nodeName: "div",
+      nodeName: 'div',
       subs: [
-        { nodeName: "b", subs: ["in bold"] },
-        "text 2"
+        { nodeName: 'b', subs: ['in bold'] },
+        'text 2'
       ]
     }
   ],
   deeplyNestedChildren: [
-    p(["div",
-      ["div",
-        ["input:checkbox#sports", { checked: true }],
-        ["label", { htmlFor: "sports" }, "Sports"]
-      ]
-    ]),
+    p(['div',
+      ['div',
+        ['input:checkbox#sports', { checked: true }],
+        ['label', { htmlFor: 'sports' }, 'Sports']]]),
     {
-      nodeName: "div",
+      nodeName: 'div',
       subs: [
         {
-          nodeName: "div",
+          nodeName: 'div',
           subs: [
             {
-              nodeName: "input",
-              attributes: { type: "checkbox", id: "sports", checked: true }
+              nodeName: 'input',
+              attributes: { type: 'checkbox', id: 'sports', checked: true }
             },
             {
-              nodeName: "label",
-              attributes: { htmlFor: "sports" },
-              subs: ["Sports"]
+              nodeName: 'label',
+              attributes: { htmlFor: 'sports' },
+              subs: ['Sports']
             }
           ]
         }
@@ -211,24 +207,23 @@ export default {
     }
   ],
   processTextNodes: [
-    f(["div",
-      ["span", "test"]
-    ]),
+    f(['div',
+      ['span', 'test']]),
     {
-      type: "div",
+      type: 'div',
       attributes: {},
       content: [
         {
-          type: "span",
+          type: 'span',
           attributes: {},
           content: [
             {
-              type: "#text",
-              nodeValue: "test"
+              type: '#text',
+              nodeValue: 'test'
             }
           ]
         }
       ]
     }
   ]
-}
+};
