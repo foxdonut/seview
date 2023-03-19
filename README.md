@@ -109,7 +109,7 @@ To use `seview` with [Preact](https://preactjs.com):
 
 ```js
 import { h } from 'seview/preact';
-import preact from 'preact';
+import { render } from 'preact';
 
 const rootView = (...) =>
   ['div.container',
@@ -117,7 +117,7 @@ const rootView = (...) =>
   ];
 
 const element = document.getElementById('app');
-preact.render(h(rootView(...)), element);
+render(h(rootView(...)), element);
 ```
 
 > [Click here for a live example: seview + Preact](https://flems.io/#0=N4IgtglgJlA2CmIBcA2FA6ALARgDQgGd4EBjAF3imRAEMAHO9AKwJHwDMIFWkBtUAHY0wiJLQboAFmTCw2IEgHsBFFdQA8UCADcABNAC8AHXF0TAPnUB6LdvMgAvrkHDRp5q3xKV8NWKsAVLoAAiwAHrp0AE7wNORSugFWRgIQYHSKUWS6wLqSug667FGKYLoA5ETaEPAA7sEATOgADOjYVtGx5FYQAlDwYehgLOUA3Ckp3gTZcWQQygS6BjkpuvoCJDEiKki6ABQkxLC4usKKAK4qAJRL5qtruoewsOjndFA0FHu5FOnwUZ9zjFdnswjcDOZdBEANSnMAXFQFK4pBzjASTBbZAAq8D+ALIQPgADUarUlvsnsdHpIuFAYgJwXcBGteOVbOVcPcWeV0BQwmQALQEc4kQ4EAgcio4vGAmIkurlAC6nOZD1ZBDoNAEkvK0ro-1l8F2ksp6Gmn3gvNx+vxhOVXN06s12pOuV6An+AAksQBZAAyuxMADJ+gBzUYAYRMBXtqu57JVDzV5QARucyGRlOgU2QBNncwLomkaFEAJ4ch1J3LKCOwCAkADWIMZp3I8wEBHQvU2uN8ZAORxO2BuTgqAEkNls+0rE0nHan05m8znlwX+uwaOdYGQhrABdgK3G59WBLX6039i3Zu3O92pyoB88TvuRydygAReA97ZkJUO2NJiQNKwHSvj3IqaKTLANDiroAAKMSzPKZIDKoUCLJ0szoBGpQZB6iLAPcUxkFEIqZlEezRIodAEDchFHsKNqUSUNFXGiawOPc9L9BRdEOjEBJRMyeyVromg6I80HisY4CCg0FiiWs4l6CQUkEDJfKCsKorwOKFgIV0ZDIdYthMnODzKeYcEwUQUDrLo2g0LA5xGjkZA0p2VE0egjnOfADgmToZnmW5HnoF5nZAbS9KcUeSk2EFDpsfcsWxRiHYzAw5L0WsvQQHMTm7DlDy-Dahq7A0zQpbO1R1CClKMg6rLoN4ZA0L0-yHuZrKSJgOpVKSuiwgZsy6AMwh0AgM6iXqBqCcSpKPlSrIJhUOE+IimripQuiZros22nKpJKlcs5JrwI3kMhroOU5Lm7JgDQFCcK06Dq62qNkW22btijwYhV3HYqir-iikEbJijxHIsyw+vA8wEBAnZEASdDfKcWUOMl6IQxlY0ID+5JQIoJDnD+6ChvAZAAKIE32ABCpZjlAezlPQdDlNjlKdmA9B7EtLbFZh8Tcf8eySHs7M+YtDWnfjvbXGiWNovISjpFw-zUCmNApsQ8hEKQcwLNQ2BIM0jjKiAdYCA2PD8CAQgiNQws7mTUAePIQJyGI0hkDRSBWFYlx0A2oYtaUHQA2QwTYK02AAMxtAl0yR4ZrxgO7LDyGQpb6tQBCbBAdBkI4zgO64+fwLVtQe-gXvUL7-uB8Hofh2AVgDXUjQtEnWgp53NdZ-gOd52IBdREXJdOC4TtiCICNI0KVNvJ7UTeyAjcEAHQcCCHYdq1Y8+KIjBBL6jwQYNgSdHyfZ9vLXIAj244+T6XM9uCmiiKGQ0wAowkB5hIOKVe69N7b15mEEgUBlxfx-iRegUDAER0-t-X+9ArCYB7s0KwQCCBWBQXAv+QxegtWAcPXOz8c4IAtvgR2z8q6DUulPIAA)

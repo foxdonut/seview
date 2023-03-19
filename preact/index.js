@@ -1,4 +1,4 @@
-import preact from 'preact';
+import { h as preactH } from 'preact';
 import { seview } from '../src';
 
 export const h = seview((node) => {
@@ -10,5 +10,5 @@ export const h = seview((node) => {
     attrs.dangerouslySetInnerHTML = { __html: attrs.innerHTML };
     delete attrs.innerHTML;
   }
-  return preact.h(node.tag, attrs, node.children || []);
+  return preactH(node.tag, attrs, node.children || []);
 });
