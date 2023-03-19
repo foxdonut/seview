@@ -23,7 +23,7 @@ Instead of writing this in JSX:
 
 Or even this in hyperscript:
 
-```javascript
+```js
 h('div', { id: 'home' }, [
   h('span', { className: 'instruction' }, 'Enter your name:'),
   h('input', { type: 'text', id: 'username', name: 'username', size: 10 }),
@@ -33,7 +33,7 @@ h('div', { id: 'home' }, [
 
 You can write this with `seview`:
 
-```javascript
+```js
 ['div#home',
   ['span.instruction', 'Enter your name:'],
   ['input:text#username[name=username][size=10]'],
@@ -53,6 +53,12 @@ virtual DOM library API.
 
 `seview` supports CSS-style selectors in tag names, `{ class: boolean }` for toggling classes, using
 an array or varags for children, flattening of nested arrays, and removal of null/empty elements.
+
+Out of the box, support is provided for 3 view libraries:
+
+- [React](https://react.dev)
+- [Preact](https://preactjs.com)
+- [Mithril](https://mithril.js.org)
 
 ### Element
 
@@ -94,21 +100,21 @@ If the second item is an object, it is considered to be the attributes for the e
 Of course, for everything that you can do with a CSS-style selector in a tag as shown in the
 previous section, you can also use attributes:
 
-```javascript
+```js
 ['input', { type: 'password', name: 'password', placeholder: 'Enter your password here' }]
 ```
 
 You can also mix selectors and attributes. If you specify something in both places, the attribute
 overwrites the selector.
 
-```javascript
+```js
 ['input:password[name=password]', { placeholder: 'Enter your password here' }]
 ```
 ```html
 <input type="password" name="password" placeholder="Enter password name here">
 ```
 
-```javascript
+```js
 ['input:password[name=username]', { type: 'text', placeholder: 'Enter your username here' }]
 ```
 ```html
@@ -120,7 +126,7 @@ overwrites the selector.
 Classes can be specified in the tag as a selector (as shown above), and/or in attributes using
 `class`:
 
-```javascript
+```js
 ['button.btn.info', { class: 'btn-default special' }]
 ```
 ```html
@@ -130,7 +136,7 @@ Classes can be specified in the tag as a selector (as shown above), and/or in at
 If you specify an object instead of a string for `class`, the keys are classes and the values
 indicate whether or not to include the class. The class is only included if the value is truthy.
 
-```javascript
+```js
 // isDefault is true
 // isError is false
 ['button.btn', { class: { 'btn-default': isDefault, 'error': isError } }]
@@ -151,7 +157,7 @@ third if attributes are present), are the children. The children can be:
 
 You can specify children as an array:
 
-```javascript
+```js
 ['div', [
   ['span', ['Hello']],
   ['b', ['World']]
@@ -168,7 +174,7 @@ You can specify children as an array:
 
 You can specify children as varargs:
 
-```javascript
+```js
 ['div',
   ['span', 'Hello'],
   ['b', 'World']
@@ -207,7 +213,7 @@ For the second case, varargs **must** be used:
 
 Whether using an array of children or varargs, nested arrays are automatically flattened:
 
-```javascript
+```js
 ['div', [
   ['div', 'one'],
   [
@@ -221,7 +227,7 @@ Whether using an array of children or varargs, nested arrays are automatically f
 
 or
 
-```javascript
+```js
 ['div',
   ['div', 'one'],
   [
@@ -255,7 +261,7 @@ The following elements are ignored and not included in the output:
 
 This makes it simple to conditionally include an element by writing:
 
-```javascript
+```js
 condition && ['div', 'message']
 ```
 
@@ -296,7 +302,7 @@ library.
 When you call `seview`, you pass it a function that gets called for every node in the view. Each
 node has the following structure:
 
-```javascript
+```js
 {
   tag: 'button',
   attrs: { id: 'save', class: 'btn btn-default', ... }
@@ -309,15 +315,22 @@ virtual DOM library that you are using. Note that your function will also be cal
 element in `children`.
 
 So you need to write a snippet of code that you pass to `seview` to wire up `seview` with the
-virtual DOM library that you are using. Below, you will find examples for 3 libraries. Using a
-different library is not difficult; you should get a pretty good idea of what to do from the
+virtual DOM library that you are using. Below, you will find examples for 3 libraries:
+
+- [React](https://react.dev)
+- [Preact](https://preactjs.com)
+- [Mithril](https://mithril.js.org)
+
+These are provided within `seview` so that you can use them out of the box.
+
+Using a different library is not difficult; you should get a pretty good idea of what to do from the
 examples below.
 
 In these examples, we assume writing views with the following attributes:
 
 - `class` for the HTML `class` attribute, to be converted to `className` for React
 - `for` for the HTML `for` attribute, to be converted to `htmlFor` for React
-- `innerHTML` for using unescaped HTML
+- `innerHTML` for using unescaped HTML, converted appropriately for React, Preact, and Mithril
 - `onClick`, `onChange`, etc. for DOM events, to be converted to lowercase for Mithril
 
 Also, please note that the snippets below are just examples; feel free to change and adapt
@@ -327,49 +340,68 @@ project and tweak the code to your preference.
 
 ## [React](https://reactjs.org/)
 
-You can import this snippet into your project with:
+You can import this snippet into your project and use it with React:
 
-```javascript
+```js
 import { h } from 'seview/react';
 ```
 
-The snippet is as follows:
+> [Click here for seview + React - live example](https://flems.io/#0=N4IgzgpgNhDGAuEAmIBcICGAHLA6AVmCADQgBmAljEagNqgB2GAthGpjrgBbzNQkhYAewaJR7ADxIKANwAEFJAF4AOhyxqAfBID00mZpABfYoxZt02PIQHDREcegrMsQgE7w5wOVzlG5ZG5CzHJqkDIUEADuAAIAjLgADLhxOm4QGAg6FAxIEAAeuMyEagDcKgwVdmCeEdFySnIAFDUYiMRymfAUImAAlA2aFXI+TbRq+mrEwyNy4+BYGJUkoSAAKhAuEG5tAK7pqKsdrYi4iFs78PsQALrTDLNzYYvLHd45DNsAEmsAsgAyhzUADI8gBzUoAYTUfjuMxG80mJHhs3mACNdvB4CJcGj4AxcfiALRYNzODBuACeUy8chEkKgFFgAGtDk0BkpNJ0ED0GGBcDlYOlWKJ2X4OmoAJIMIWbBzwNQ3FFKh5yG59cqVGVQDBgMBySFCXb2NxyApiJD6gBKGQQuENLhE8q8M2q8DcuwQ7iapKEWH6LtVIzAuyw2x9QX9GpRbrkkCgZAacngXAoYE1j3jZFwJwgSe85zDl2uhwATIk-BnZlncF1efrGsAUSNBcL5Yca625aJcTkkC1oGQ+iijFWjDMuyL4GKm0Hk6n+ZB4ABleBtCBNAubIt7A7ztM5tenQvbXd5gDUcjifmjqvHqvSuXDA1nj3SVzcDzqUSaKYPuY6P9+TrXpbxGe97yqHU9TkABBHAzXyC1rVteB7WCVxPlEQMRkfPI3BnFF332B4uDGCZZFwOw1xybYpmbJ4QC4OIaTCCBvzkS8bS6RCWCwGBFXuR4EUNY1EDcFVHnVMcKnvbiEAAEQAeV+XA8PDMjaHgrB1Q6Kxb1sDCqG2dg0QwNFoGMO4QEZBhmRoegQCYVh2HSLpcDyGRoD9KcCCIUh9n4dAeHgf1UB0HRjSwZkwSo4I0lQyLmCQBL3M87ysF8mxSHgSkw3YMAhQoLB4GMUwnPMVzUKJJBgg89iMqy-yQEC9gQrCiKopiuLmFShAavi3Zkr6+ABuYeqvKgHz5T8gRcvy9BCrJEqyrMFz0DRIQhHgGodjwZgciovUBFa4KsQ6nRmAwfJYCQAlNu23bsFuglhF6h6dvdbAdAAFiSJIdFgPUdA+p79sOoHmvmixwFymBVoq9bwHYyIohOtwgqY86wHCyKGGi2K3p0cJUZiZIAFYAekGpiZR6JZpyvKYaW4rSqMaznOZumojkeS2aAA)
 
-```javascript
+For reference, the snippet is as follows:
+
+```js
 import React from 'react';
 import { seview } from 'seview';
 
-export const h = seview(node => {
+const attrMap = {
+  onInput: 'onChange',
+  class: 'className',
+  for: 'htmlFor'
+};
+
+const processAttrs = (attrs = {}) => {
+  Object.keys(attrs).forEach((key) => {
+    const mappedKey = attrMap[key];
+    if (mappedKey) {
+      attrs[mappedKey] = attrs[key];
+      delete attrs[key];
+    }
+  });
+  return attrs;
+};
+
+export const h = seview((node) => {
   if (typeof node === 'string') {
     return node;
   }
-  const attrs = node.attrs || {};
+  const attrs = processAttrs(node.attrs);
   if (attrs.innerHTML) {
     attrs.dangerouslySetInnerHTML = { __html: attrs.innerHTML };
     delete attrs.innerHTML;
   }
-  const args = [node.tag, node.attrs || {}].concat(node.children || []);
+  const args = [node.tag, attrs].concat(node.children || []);
   return React.createElement.apply(null, args);
 });
 ```
 
-[seview + React - live example](https://flems.io/#0=N4IgzgpgNhDGAuEAmIBcICGAHLA6AVmCADQgBmAljEagNqgB2GAthGpjrgBbzNQkhYAewaJR7ADxIKANwAEFJAF4AOhyxqAfBID00mZpABfYoxZt02PIQHDREcegrMsQgE7w5wOVzlG5ZG5CzHJqkDIUEADuAAIAjLgADLhxOm4QGAg6FAxIEAAeuMyEagDcKgwVdmCeEdFySnIAFDUYiMRymfAUImAAlA2aFXI+TbRq+mrEwyNy4+BYGJUkoSAAKhAuEG5tAK7pqKsdrYi4iFs78PsQALrTDLNzYYvLHd45DNsAEmsAsgAyhzUADI8gBzUoAYTUfjuMxG80mJHhs3mACNdvB4CJcGj4AxcfiALRYNzODBuACeUy8chEkKgFFgAGtDk0BkpNJ0ED0GGBcDlYOlWKJ2X4OmoAJIMIWbBzwNQ3FFKh5yG59cqVGVQDBgMBySFCXb2NxyApiJD6gBKGQQuENLhE8q8M2q8DcuwQ7iapKEWH6LtVIzAuyw2x9QX9GpRbrkkCgZAacngXAoYE1j3jZFwJwgSe85zDl2uhwATIk-BnZlncF1efrGsAUSNBcL5Yca625aJcTkkC1oGQ+iijFWjDMuyL4GKm0Hk6n+ZB4ABleBtCBNAubIt7A7ztM5tenQvbXd5gDUcjifmjqvHqvSuXDA1nj3SVzcDzqUSaKYPuY6P9+TrXpbxGe97yqHU9TkABBHAzXyC1rVteB7WCVxPlEQMRkfPI3BnFF332B4uDGCZZFwOw1xybYpmbJ4QC4OIaTCCBvzkS8bS6RCWCwGBFXuR4EUNY1EDcFVHnVMcKnvbiEAAEQAeV+XA8PDMjaHgrB1Q6Kxb1sDCqG2dg0QwNFoGMO4QEZBhmRoegQCYVh2HSLpcDyGRoD9KcCCIUh9n4dAeHgf1UB0HRjSwZkwSo4I0lQyLmCQBL3M87ysF8mxSHgSkw3YMAhQoLB4GMUwnPMVzUKJJBgg89iMqy-yQEC9gQrCiKopiuLmFShAavi3Zkr6+ABuYeqvKgHz5T8gRcvy9BCrJEqyrMFz0DRIQhHgGodjwZgciovUBFa4KsQ6nRmAwfJYCQAlNu23bsFuglhF6h6dvdbAdAAFiSJIdFgPUdA+p79sOoHmvmixwFymBVoq9bwHYyIohOtwgqY86wHCyKGGi2K3p0cJUZiZIAFYAekGpiZR6JZpyvKYaW4rSqMaznOZumojkeS2aAA)
-
 ## [Preact](https://preactjs.com/)
 
-You can import this snippet into your project with:
+You can import this snippet into your project and use it with Preact:
 
-```javascript
+```js
 import { h } from 'seview/preact';
 ```
 
-The snippet is as follows:
+> [Click here for seview + Preact - live example](https://flems.io/#0=N4IgzgpgNhDGAuEAmIBcICGAHLA6AVmCADQgBmAljEagNqgB2GAthGpjrgBbzNQkhYAewaJR7ADxIKANwAEFJAF4AOhyxqAfBID00mZpABfYoxZt02PIQHDREcegrMsQgE7w5wOVzlG5ZG5CzHJqkDIUEADuAAIAjLgADLhxOlhuEBgIOhQMSBAAHrjMhGoA3CoMlXZgnhHRckpyABS1GIjEclnwFCJgAJSNmpVyPs20avpqxCOjchPgWBhVJKEgACoQLhBu7QCuGahrnW2IuIjbu-AHEAC6Mwxz82FLK53euQw7ABLrALIAGSOagAZPkAOZlADCaj891mowWUxICLmCwARnt4PARLh0fAGHiCQBadLODBuACe0y8chEUKgFFgAGsjs1BkpNF0EL0GGBcLlYBlWKJ2X5OmoAJIMIVbBzwNS3VFKx5yW79CpVGVQDBgMByKFCPb2NxyQpiJD69KZBC4Q0uETyryzYQOr6iADqVCgfyNosGwFRNU8kCgZEacngXAoYE1T1DZFwkHgAGV4O0IM1vBcsDt9oc5AAmRJ+DWohO4bq8-VNQOqp6C4Xyo4Vxty0R43JIVrQMj9VFGON+WZtkXwMV1p5RmNJiCp9OILORra5q43I7T-mnCDnFd564ZOQAajkcVLQ6MswyeR2E9RGQPj3qUWam6TC4gnTfVb6ZdVl4YADqh1PU5AAQRwM0CgtK0Mm6O1glcd1PEnORr3yNw73rNC5wOR4uHGSZZFwOx01yHZplRRE1C4OIaTCCBn2POQAAU4IQKCWCwGBFQeJ5EUNY1EDcFUnnVC9KgA614PQ28CNoCCsHVTorD-WxEKoHZ2HRDB0WgYx7hARkGGZGh6BAJhWHYaSEAEA5+HQHh4CwMBUB0HRjSwZlwRI4I0nY+AYgADlwQtcAATj0GN4H8m14AIIhSHgSlc3YMAhQoLB4GMUwLPMbShCEeBal2PBmFyEi9TstwHJAJyXLcnRmAwApYCQQl0UK4r4FKtrCVdHROqKkrsB0AAWJIkh0WA9UGrqRrKiqZsSkBktS9BakpGAcrMKyNsYyIomq2r6tc9zPO83zmB0cJDpiZIAFYpukWoboO6IEoENaLHADKsoM0hLJ+26GjYuLjCAA)
 
-```javascript
+For reference, the snippet is as follows:
+
+```js
 import preact from 'preact';
 import { seview } from 'seview';
 
-export const h = seview(node => {
+export const h = seview((node) => {
   if (typeof node === 'string') {
     return node;
   }
@@ -378,47 +410,44 @@ export const h = seview(node => {
     attrs.dangerouslySetInnerHTML = { __html: attrs.innerHTML };
     delete attrs.innerHTML;
   }
-  return preact.h(node.tag, node.attrs || {}, node.children || []);
+  return preact.h(node.tag, attrs, node.children || []);
 });
 ```
 
-[seview + Preact - live example](https://flems.io/#0=N4IgzgpgNhDGAuEAmIBcICGAHLA6AVmCADQgBmAljEagNqgB2GAthGpjrgBbzNQkhYAewaJR7ADxIKANwAEFJAF4AOhyxqAfBID00mZpABfYoxZt02PIQHDREcegrMsQgE7w5wOVzlG5ZG5CzHJqkDIUEADuAAIAjLgADLhxOlhuEBgIOhQMSBAAHrjMhGoA3CoMlXZgnhHRckpyABS1GIjEclnwFCJgAJSNmpVyPs20avpqxCOjchPgWBhVJKEgACoQLhBu7QCuGahrnW2IuIjbu-AHEAC6Mwxz82FLK53euQw7ABLrALIAGSOagAZPkAOZlADCaj891mowWUxICLmCwARnt4PARLh0fAGHiCQBadLODBuACe0y8chEUKgFFgAGsjs1BkpNF0EL0GGBcLlYBlWKJ2X5OmoAJIMIVbBzwNS3VFKx5yW79CpVGVQDBgMByKFCPb2NxyQpiJD69KZBC4Q0uETyryzYQOr6iADqVCgfyNosGwFRNU8kCgZEacngXAoYE1T1DZFwkHgAGV4O0IM1vBcsDt9oc5AAmRJ+DWohO4bq8-VNQOqp6C4Xyo4Vxty0R43JIVrQMj9VFGON+WZtkXwMV1p5RmNJiCp9OILORra5q43I7T-mnCDnFd564ZOQAajkcVLQ6MswyeR2E9RGQPj3qUWam6TC4gnTfVb6ZdVl4YADqh1PU5AAQRwM0CgtK0Mm6O1glcd1PEnORr3yNw73rNC5wOR4uHGSZZFwOx01yHZplRRE1C4OIaTCCBn2POQAAU4IQKCWCwGBFQeJ5EUNY1EDcFUnnVC9KgA614PQ28CNoCCsHVTorD-WxEKoHZ2HRDB0WgYx7hARkGGZGh6BAJhWHYaSEAEA5+HQHh4CwMBUB0HRjSwZlwRI4I0nY+AYgADlwQtcAATj0GN4H8m14AIIhSHgSlc3YMAhQoLB4GMUwLPMbShCEeBal2PBmFyEi9TstwHJAJyXLcnRmAwApYCQQl0UK4r4FKtrCVdHROqKkrsB0AAWJIkh0WA9UGrqRrKiqZsSkBktS9BakpGAcrMKyNsYyIomq2r6tc9zPO83zmB0cJDpiZIAFYpukWoboO6IEoENaLHADKsoM0hLJ+26GjYuLjCAA)
-
 ## [Mithril](http://mithril.js.org/)
 
-You can import this snippet into your project with:
+You can import this snippet into your project and use it with Mithril:
 
-```javascript
+```js
 import { h } from 'seview/mithril';
 ```
 
-The snippet is as follows:
+> [Click here for seview + Mithril - live example](https://flems.io/#0=N4IgzgpgNhDGAuEAmIBcICGAHLA6AVmCADQgBmAljEagNqgB2GAthGpjrgBbzNQkhYAewaJR7ADxIKANwAEFJAF4AOhyxqAfBID00mZpABfYoxZt02PIQHDREcegrMsQgE7w5wOVzlG5ZG5CzHJqkDIUEADuAAIAjLgADLhxOswU8FxuVDoUDEgQAB64zIRqANwqDFV2YJ4R0XJKcgAUdRiIxHIYCBQiYACUTZpVcj4ttGr6asSjY3KT4FgY1SShIAAqEC4Qbh0Arm4QqOtd7Yi4iDt78IcQALqzDPMLYcurXd55DLsAEhsAWQAMic1AAyAoAc3KAGE1H5HnMxotpiQkfNFgAjfbweAiXCY+AMAlEgC0WGyzAwbgAnjMvHIRDCoBRYABrE4tIZKTTdXr9XB5WBHViiLl+LpqACSDGF2wc8DU93RyuecnuA0q1Vl-U8MKE+3sbiaAUN-IY4uAcxgniuWF2ByOJoATIktXMyGb4H1nkKRQrLei7Q7bkcANRhrVjIxVOZHUPPK1qsYNKInGQMIQFYZyVMtbzBm53CUMv3y0R+AZzIxamuxnUMOpyACCOBNSZTkTTucz2Z54xRslwdngGDyuxm6MWXDi9LCEFTcjDcgBGSyVDkRRYWBgSqeL1o+sNiDcqrGGqqde1zBKBrFVi6rawmqqtmCWCou3YmIwmOgxkeEAWQYNkaHoEAmFYdh0kybJ+FIQ5+HQHh4CwMBUB0HRDSwNlIWHYI0jXOD4hSXAADZCNgqgCCIUh4Bpe12DAYUKCweBjFMCDzG-IQhHgOo9jwdJiVgMBaJARD2BQtCMLSDBClgJBiUxXj+PgQTFJEgiVL4gTsB0AAWJIkh0USwB0HS1MEko8mHMSBHoxj0DqGkYA4swoOchcuwESTkNxGTMOw3D8OYHRwi7GJkgAVhM6Q6nC7zohohyGIscAWLYgDSEg9KIsaVcqP4IwgA)
 
-```javascript
+For reference, the snippet is as follows:
+
+```js
 import m from 'mithril';
 import { seview } from 'seview';
 
 const processAttrs = (attrs = {}) => {
-  Object.keys(attrs).forEach(key => {
+  Object.keys(attrs).forEach((key) => {
     if (key.startsWith('on')) {
-      const value = attrs[key];
+      attrs[key.toLowerCase()] = attrs[key];
       delete attrs[key];
-      attrs[key.toLowerCase()] = value;
     }
-  })
+  });
   return attrs;
 };
 
-export const h = seview(node =>
+export const h = seview((node) =>
   (typeof node === 'string')
-  ? { tag: '#', children: node }
-  : node.attrs && node.attrs.innerHTML
-    ? m(node.tag, m.trust(node.attrs.innerHTML))
-    : m(node.tag, processAttrs(node.attrs), node.children || [])
+    ? { tag: '#', children: node }
+    : node.attrs && node.attrs.innerHTML
+      ? m(node.tag, m.trust(node.attrs.innerHTML))
+      : m(node.tag, processAttrs(node.attrs), node.children || [])
 );
 ```
-
-[seview + Mithril - live example](https://flems.io/#0=N4IgzgpgNhDGAuEAmIBcICGAHLA6AVmCADQgBmAljEagNqgB2GAthGpjrgBbzNQkhYAewaJR7ADxIKANwAEFJAF4AOhyxqAfBID00mZpABfYoxZt02PIQHDREcegrMsQgE7w5wOVzlG5ZG5CzHJqkDIUEADuAAIAjLgADLhxOswU8FxuVDoUDEgQAB64zIRqANwqDFV2YJ4R0XJKcgAUdRiIxHIYCBQiYACUTZpVcj4ttGr6asSjY3KT4FgY1SShIAAqEC4Qbh0Arm4QqOtd7Yi4iDt78IcQALqzDPMLYcurXd55DLsAEhsAWQAMic1AAyAoAc3KAGE1H5HnMxotpiQkfNFgAjfbweAiXCY+AMAlEgC0WGyzAwbgAnjMvHIRDCoBRYABrE4tIZKTTdXr9XB5WBHViiLl+LpqACSDGF2wc8DU93RyuecnuA0q1Vl-U8MKE+3sbiaAUN-IY4uAcxgniuWF2ByOJoATIktXMyGb4H1nkKRQrLei7Q7bkcANRhrVjIxVOZHUPPK1qsYNKInGQMIQFYZyVMtbzBm53CUMv3y0R+AZzIxamuxnUMOpyACCOBNSZTkTTucz2Z54xRslwdngGDyuxm6MWXDi9LCEFTcjDcgBGSyVDkRRYWBgSqeL1o+sNiDcqrGGqqde1zBKBrFVi6rawmqqtmCWCou3YmIwmOgxkeEAWQYNkaHoEAmFYdh0kybJ+FIQ5+HQHh4CwMBUB0HRDSwNlIWHYI0jXOD4hSXAADZCNgqgCCIUh4Bpe12DAYUKCweBjFMCDzG-IQhHgOo9jwdJiVgMBaJARD2BQtCMLSDBClgJBiUxXj+PgQTFJEgiVL4gTsB0AAWJIkh0USwB0HS1MEko8mHMSBHoxj0DqGkYA4swoOchcuwESTkNxGTMOw3D8OYHRwi7GJkgAVhM6Q6nC7zohohyGIscAWLYgDSEg9KIsaVcqP4IwgA)
 
 ## Credits
 

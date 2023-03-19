@@ -2,9 +2,8 @@
 const processAttrs = (attrs = {}) => {
   Object.keys(attrs).forEach((key) => {
     if (key.startsWith('on')) {
-      const value = attrs[key];
+      attrs[key.toLowerCase()] = attrs[key];
       delete attrs[key];
-      attrs[key.toLowerCase()] = value;
     }
   });
   return attrs;

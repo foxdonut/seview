@@ -1,10 +1,16 @@
 /* global React, seview */
+const attrMap = {
+  onInput: 'onChange',
+  class: 'className',
+  for: 'htmlFor'
+};
+
 const processAttrs = (attrs = {}) => {
   Object.keys(attrs).forEach((key) => {
-    if (key === 'onInput') {
-      const value = attrs[key];
+    const mappedKey = attrMap[key];
+    if (mappedKey) {
+      attrs[mappedKey] = attrs[key];
       delete attrs[key];
-      attrs['onChange'] = value;
     }
   });
   return attrs;
