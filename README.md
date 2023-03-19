@@ -71,7 +71,8 @@ Out of the box, `seview` supports 3 view libraries:
 - [Preact](https://preactjs.com)
 - [Mithril](https://mithril.js.org)
 
-Using a different library is not difficult; TODO reference
+Using a different library is not difficult. See
+[Using a different view library](#using-a-different-view-library).
 
 When using `seview` with built-in support, we assume writing views with the following attributes:
 
@@ -140,31 +141,6 @@ m.mount(document.getElementById('app'), {
 ```
 
 > [Click here for a live example: seview + Mithril](https://flems.io/#0=N4IgtglgJlA2CmIBcA2FA6ALARgDQgGd4EBjAF3imRAEMAHO9AKwJHwDMIFWkBtUAHY0wiJLQboAFmTCw2IEgHsBFFdQA8UCADcABNAC8AHXF0TAPnUB6LdvMgAvrkHDRp5q3xKV8NWIhgdIoATmS6wLqSug667MGKYLoA5ETaEPAA7gACAEzoAAzo2FaQZJLBXFYQAlDwAB7oYCxJANxGAu3eBGE05BDKBLoG4e26+gIkwfAiKki6ABQkxLC4usKKAK4qAJRD5qNjukuwsOgbdFA0FPMRFIHwwVcbU3PzdbsG5rp1ugDUa2BNipott2g42h0JgMwgAVaZ0B5PKYANXSGSGC2OKyOki4UCmAg++wEY14SVsSVwB1JSXQFDqZAAtAQNiQlgQCJTknD7o8yM94KjMkkALpUkmHMkEOg0ARcpI8hF8gVzLlY9DdK7wOnwxH8qZi6m6KUyuWrCLVAQPAASMIAsgAZOYmABktQA5i0AMImaKGiU0iniw6SpIAIw2ZDIynQYbIAlj8cZdAqYBowQAnpSjSGIsovbAICQANavIlrPoDdDVSbTXxkRbLVbYXZOZIASQmUxmZFFwZDxvDkejCbjo6TtXYNA2sDIjVgjOw2YDA7zAgLRdLC3LvTI-QEBGrXbrKkbJ1Wi9bqySABF4LWe6Kjf6QyRcbB8b4DiKIZ1obo7QgMoKlgIV0WGYADjSTJXgiK4yGCAhVjfPECRBPYjTAeZaTAJkcmXAddCw2l6SZFk2XgDl5UA4CuDApJtn7ENiKDZIAAUaA5Shxl0bQaFgDZ4FVVZ4MQ9A+IE+BGJzHFUK-FdQQEBx2j-A8egYDFIIlaogIgfi5i0kM7iVJEhN0HJ8gOJwoLRV4sSJI0yXQbwyBoaoHgIgcyUkTB5VSNE-gAoDyi4XR6mEOgED7GTFT1AUwLPbEyVYpIvWUVQwhlLioF0aNdFi5UUTRUVpJXUkaJC0C0XNXj+MEuZMByaJVmSnR5TSnxgSyogcryiqQPokURWfMFfyhNSjmWQZhjteB+gICBDyIfk6BuNYNIcbYxrARogQbKBFBIDYe3Qd14DIABRBAewAIQzdsoGw+g6AY80bJg7c9kieZnvEtFEoIeZtmBsEtpUiYpsaeh5iBr6dqmfEaAyIGwYEeQlECLgHmoMMaDDYhHDFEBCwEYseH4EAhBEahSkqjx5GeOQxGkMg6AIJArCsLY6GLd1nISEpgpA3J0DyHJBdo04WHkMgMwRagCEmCA6DIRxnEp1wFfgaCMnp-BGeoFm2Y5rmBB5vmMasfzMhFwpii0bore1tE9ZAWX5bERWKhVtWXGpsQRHmxbmXO84GeCJmQCN9nOe53n+bAEo5sUBaCBDlasgwbAiiToO0+W85XfdtwveV1WnD9tww0URQyG6R5GEgBMSA5cPI+jk20zqEgoFHGu64Q+ge+bgXq9r+v6CsTACgKKwW4IKwx4HhvGmqZzW-wYuFdlhBCfwKmS+dzIgslxwgA)
-
-----------
-
-`seview` exports a single function, `seview`, that you use to obtain a function which you can name
-as you wish; in the examples, I name this function `h`. Calling `h(view)`, where `view` is the view
-expressed as arrays as we have seen above, produces the final result suitable for your virtual DOM
-library.
-
-When you call `seview`, you pass it a function that gets called for every node in the view. Each
-node has the following structure:
-
-```js
-{
-  tag: 'button',
-  attrs: { id: 'save', class: 'btn btn-default', ... }
-  children: [ ... ]
-}
-```
-
-The function that you write needs to convert the structure above to what is expected by the
-virtual DOM library that you are using. Note that your function will also be called for each
-element in `children`.
-
-So you need to write a snippet of code that you pass to `seview` to wire up `seview` with the
-virtual DOM library that you are using.
 
 ## Features
 
@@ -388,6 +364,42 @@ The following elements will be converted to a string:
 - numbers
 - `NaN`
 - `Infinity`
+
+## Using a different view library
+
+`seview` exports a single function, `seview`, that you use to create an `h` function that works with
+the view library of your choice. Calling `h(view)`, where `view` is the view expressed as arrays as
+we have seen above, produces the final result suitable for your view library.
+
+To set up your view library, call `seview` and pass it a function that gets called for every node in
+the view. Each node has the following structure:
+
+```js
+{
+  tag: 'button',
+  attrs: { id: 'save', class: 'btn btn-default', ... }
+  children: [ ... ]
+}
+```
+
+The function that you write needs to convert the structure above to what is expected by the view
+library that you are using. Note that your function will also be called for each element in
+`children`.
+
+```js
+import { seview } from 'seview';
+import { myViewLibrary } from 'my-view-library';
+
+export const h = seview((node) => {
+  const tag = processTagAsNecessary(node.tag);
+  const attrs = processAttrsAsNecessary(node.tag);
+
+  return myViewLibrary(tag, attrs, node.children || []);
+});
+```
+
+Then you can use `h` with your view library in a similar way as we saw in the [Usage](#usage)
+section.
 
 ## Credits
 
