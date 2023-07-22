@@ -2,5 +2,6 @@
 .gitignore
 .vscode
 babel.config.json
+jestconfig.json
 rollup.config.mjs
-test
+tests
